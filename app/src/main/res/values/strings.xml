@@ -1,3 +1,14 @@
 <resources>
-    <string name="app_name" translatable="false">声Cat</string>
+    <string name="app_name" translatable="false">ShengCat</string>
+    <string name="app_title" translatable="false">声Cat</string>
+
+    <string name="main_screen_name">Main</string>
+    <string name="phrasebook_screen_name">Phrases</string>
+    <string name="translator_screen_name">Translator</string>
+    <string name="translator_history_screen_name">History</string>
+    <string name="practice_screen_name">Tones</string>
+    <string name="practice_recognition_screen_name">Tone recognition</string>
+    <string name="practice_pronunciation_screen_name">Tone pronunciation</string>
+    <string name="practice_history_screen_name">History</string>
+    <string name="settings_screen_name">Settings</string>
 </resources>

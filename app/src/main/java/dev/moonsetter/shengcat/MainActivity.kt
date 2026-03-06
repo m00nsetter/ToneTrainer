@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
 import dagger.hilt.android.AndroidEntryPoint
 import dev.moonsetter.shengcat.ui.theme.ShengCatTheme
 
@@ -14,8 +16,14 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ShengCatTheme {
-                //MainScreen()
+                AppNavigation()
             }
         }
     }
+}
+
+@Preview(showSystemUi = true)
+@Composable
+fun AppPreview() {
+    AppNavigation()
 }

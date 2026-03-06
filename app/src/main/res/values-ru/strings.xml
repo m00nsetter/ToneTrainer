@@ -1,1 +1,12 @@
-<resources></resources>
+<resources>
+
+    <string name="main_screen_name">Главная</string>
+    <string name="phrasebook_screen_name">Фразы</string>
+    <string name="translator_screen_name">Переводчик</string>
+    <string name="translator_history_screen_name">История</string>
+    <string name="practice_screen_name">Тоны</string>
+    <string name="practice_recognition_screen_name">Распознавание тонов</string>
+    <string name="practice_pronunciation_screen_name">Произношение тонов</string>
+    <string name="practice_history_screen_name">История</string>
+    <string name="settings_screen_name">Настройки</string>
+</resources>
