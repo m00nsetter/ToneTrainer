@@ -11,4 +11,8 @@
     <string name="practice_pronunciation_screen_name">Tone pronunciation</string>
     <string name="practice_history_screen_name">History</string>
     <string name="settings_screen_name">Settings</string>
+
+    <string name="zh_language">Chinese</string>
+    <string name="eng_language">English</string>
+    <string name="ru_language">Russian</string>
 </resources>

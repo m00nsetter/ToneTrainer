@@ -67,6 +67,8 @@ fun AppNavigation() {
     val showBottomBar = currentRoute !in hideBottomBarRoutes
 
     Scaffold(
+        // TODO: top app bar
+
         bottomBar = {
             if (showBottomBar) {
                 NavigationBar {
@@ -76,10 +78,10 @@ fun AppNavigation() {
                             onClick = {
                                 navController.navigate(item.route) {
                                     popUpTo(navController.graph.startDestinationId) {
-                                        saveState = true // сохраняет состояние экрана перед переключением на другой
+                                        saveState = true
                                     }
-                                    launchSingleTop = true // не создавать копию при переключении на тот же экран что открыт
-                                    restoreState = true // восстанавливает экран при переключении обратно
+                                    launchSingleTop = true
+                                    restoreState = true
                                 }
                             },
                             icon = { Icon(item.icon, contentDescription = stringResource(item.label)) },
