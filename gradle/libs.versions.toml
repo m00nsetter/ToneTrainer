@@ -1,6 +1,5 @@
 [versions]
 agp = "9.0.1"
-comGoogleDevtoolsKspGradlePlugin = "2.3.4"
 coreKtx = "1.17.0"
 hiltAndroid = "2.59.2"
 junit = "4.13.2"
