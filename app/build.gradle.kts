@@ -72,4 +72,5 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.security.crypto)
     implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.translate)
 }
