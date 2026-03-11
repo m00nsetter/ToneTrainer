@@ -11,7 +11,7 @@ data class TranslationEntity(
     @PrimaryKey(autoGenerate = true) val id: Int,
     val text: String,
     val translation: String,
-    val pinyin: String,
+    val pinyin: String?,
     val sourceLang: Language,
     val targetLang: Language,
     val engine: TranslationEngine,
