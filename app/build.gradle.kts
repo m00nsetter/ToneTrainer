@@ -73,4 +73,5 @@ dependencies {
     implementation(libs.androidx.security.crypto)
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.translate)
+    implementation(libs.pinyin4j)
 }
