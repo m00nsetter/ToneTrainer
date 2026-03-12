@@ -23,6 +23,14 @@ private fun fixToneMarks(text: String): String {
         .replace('Ŭ', 'Ǔ')
 }
 
+private fun cleanupSpacing(text: String): String {
+    return text
+        .replace(Regex("\\s+"), " ")
+        .replace(Regex(" ([，。！？；：、）】》\",.!?;:])"), "$1")
+        .replace(Regex("([，。！？；：、]) "), "$1")
+        .trim()
+}
+
 private val format: HanyuPinyinOutputFormat = HanyuPinyinOutputFormat().apply {
     caseType = HanyuPinyinCaseType.LOWERCASE
     toneType = HanyuPinyinToneType.WITH_TONE_MARK
@@ -56,4 +64,5 @@ fun hanziToPinyin(text: String): String {
             word.trim()
         }
     }.trim().let { fixToneMarks(it) }
+            .let { cleanupSpacing(it) }
 }
