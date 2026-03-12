@@ -2,8 +2,8 @@ package dev.moonsetter.shengcat.data.db.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import dev.moonsetter.shengcat.data.model.Language
-import dev.moonsetter.shengcat.data.model.TranslationEngine
+import dev.moonsetter.shengcat.model.Language
+import dev.moonsetter.shengcat.model.TranslationEngine
 import java.time.LocalDate
 
 @Entity(tableName="translation_table")

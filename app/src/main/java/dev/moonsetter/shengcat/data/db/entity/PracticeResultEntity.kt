@@ -2,7 +2,7 @@ package dev.moonsetter.shengcat.data.db.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import dev.moonsetter.shengcat.data.model.PracticeMode
+import dev.moonsetter.shengcat.model.PracticeMode
 import java.time.LocalDate
 
 @Entity(tableName="practice_result_table")

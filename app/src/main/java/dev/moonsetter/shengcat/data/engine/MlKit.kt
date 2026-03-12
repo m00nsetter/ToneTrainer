@@ -4,8 +4,8 @@ import com.google.mlkit.common.model.DownloadConditions
 import com.google.mlkit.nl.translate.TranslateLanguage
 import com.google.mlkit.nl.translate.Translation
 import com.google.mlkit.nl.translate.TranslatorOptions
-import dev.moonsetter.shengcat.data.model.Language
-import dev.moonsetter.shengcat.data.model.Language.*
+import dev.moonsetter.shengcat.model.Language
+import dev.moonsetter.shengcat.model.Language.*
 import kotlinx.coroutines.suspendCancellableCoroutine
 
 class MlKit : TranslationEngine {

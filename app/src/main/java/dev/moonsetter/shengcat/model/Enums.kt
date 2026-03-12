@@ -1,4 +1,4 @@
-package dev.moonsetter.shengcat.data.model
+package dev.moonsetter.shengcat.model
 
 enum class Language { CHINESE, ENGLISH, RUSSIAN }
 enum class TranslationEngine { MLKIT }

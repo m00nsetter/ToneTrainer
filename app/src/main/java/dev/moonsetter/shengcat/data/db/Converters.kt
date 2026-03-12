@@ -1,9 +1,9 @@
 package dev.moonsetter.shengcat.data.db
 
 import androidx.room.TypeConverter
-import dev.moonsetter.shengcat.data.model.Language
-import dev.moonsetter.shengcat.data.model.PracticeMode
-import dev.moonsetter.shengcat.data.model.TranslationEngine
+import dev.moonsetter.shengcat.model.Language
+import dev.moonsetter.shengcat.model.PracticeMode
+import dev.moonsetter.shengcat.model.TranslationEngine
 import java.time.LocalDate
 
 class Converters {

@@ -1,6 +1,6 @@
 package dev.moonsetter.shengcat.data.engine
 
-import dev.moonsetter.shengcat.data.model.Language
+import dev.moonsetter.shengcat.model.Language
 
 data class TranslationResult(val translatedText: String, val pinyin: String?, val error: String?)
 

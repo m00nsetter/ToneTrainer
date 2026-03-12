@@ -4,8 +4,8 @@ import dev.moonsetter.shengcat.data.db.dao.TranslationDao
 import dev.moonsetter.shengcat.data.db.entity.TranslationEntity
 import dev.moonsetter.shengcat.data.engine.MlKit
 import dev.moonsetter.shengcat.data.engine.TranslationResult
-import dev.moonsetter.shengcat.data.model.Language
-import dev.moonsetter.shengcat.data.model.TranslationEngine
+import dev.moonsetter.shengcat.model.Language
+import dev.moonsetter.shengcat.model.TranslationEngine
 import javax.inject.Inject
 import javax.inject.Singleton
 import java.time.LocalDate
