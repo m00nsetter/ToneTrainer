@@ -74,4 +74,5 @@ dependencies {
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.translate)
     implementation(libs.pinyin4j)
+    implementation(libs.jieba.analysis)
 }
