@@ -21,7 +21,11 @@ class TranslationRepository @Inject constructor(
             return result
         }
 
-        val pinyin = if (to == Language.CHINESE) hanziToPinyin(result.translatedText) else null
+        val pinyin = when {
+            from == Language.CHINESE -> hanziToPinyin(text)
+            to == Language.CHINESE -> hanziToPinyin(result.translatedText)
+            else -> null
+        }
 
         translationDao.insert(
             TranslationEntity(
