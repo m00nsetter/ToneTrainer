@@ -4,11 +4,14 @@ import com.google.mlkit.common.model.DownloadConditions
 import com.google.mlkit.nl.translate.TranslateLanguage
 import com.google.mlkit.nl.translate.Translation
 import com.google.mlkit.nl.translate.TranslatorOptions
-import dev.moonsetter.shengcat.model.Language
-import dev.moonsetter.shengcat.model.Language.*
+import dev.moonsetter.shengcat.data.model.Language
+import dev.moonsetter.shengcat.data.model.Language.*
 import kotlinx.coroutines.suspendCancellableCoroutine
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class MlKit : TranslationEngine {
+@Singleton
+class MlKit @Inject constructor() : TranslationEngine {
     private fun languageToTranslateLanguage(language: Language): String {
         return when (language) {
             CHINESE -> TranslateLanguage.CHINESE
