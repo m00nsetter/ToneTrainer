@@ -27,7 +27,7 @@ private fun cleanupSpacing(text: String): String {
     return text
         .replace(Regex("\\s+"), " ")
         .replace(Regex(" ([，。！？；：、）】》\",.!?;:])"), "$1")
-        .replace(Regex("([，。！？；：、]) "), "$1")
+        .replace(Regex("([，。！？；：、#]) "), "$1")
         .trim()
 }
 
