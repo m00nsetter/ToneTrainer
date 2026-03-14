@@ -23,11 +23,30 @@ private fun fixToneMarks(text: String): String {
         .replace('Ŭ', 'Ǔ')
 }
 
+private fun fixPunctuation(text: String): String {
+    return text
+        .replace('。', '.')
+        .replace('，', ',')
+        .replace('、', ',')
+        .replace('？', '?')
+        .replace('！', '!')
+        .replace('：', ':')
+        .replace('；', ';')
+        .replace('（', '(')
+        .replace('）', ')')
+        .replace('《', '«')
+        .replace('》', '»')
+        .replace('「', '«')
+        .replace('」', '»')
+        .replace('【', '[')
+        .replace('】', ']')
+}
+
 private fun cleanupSpacing(text: String): String {
     return text
         .replace(Regex("\\s+"), " ")
-        .replace(Regex(" ([，。！？；：、）】》\",.!?;:])"), "$1")
-        .replace(Regex("([，。！？；：、#]) "), "$1")
+        .replace(Regex(" ([。，、？！：；）》”」】（《“「【.,?!:;)»\\]])"), "$1")
+        .replace(Regex("([。，、？！：；（《“「【）》”」】#(«\\[]) "), "$1")
         .trim()
 }
 
@@ -64,5 +83,6 @@ fun hanziToPinyin(text: String): String {
             word.trim()
         }
     }.trim().let { fixToneMarks(it) }
+            .let { fixPunctuation(it) }
             .let { cleanupSpacing(it) }
 }
