@@ -28,12 +28,20 @@ class TranslatorViewModel @Inject constructor(val repository: TranslationReposit
     private set
 
     fun onLanguageSwapClick() {
-        uiState = uiState.copy(
-            sourceLang = uiState.targetLang,
-            targetLang = uiState.sourceLang,
-            inputText = uiState.translatedText,
-            translatedText = uiState.inputText
-        )
+        uiState = if (uiState.translatedText.isBlank()) {
+            uiState.copy(
+                sourceLang = uiState.targetLang,
+                targetLang = uiState.sourceLang,
+                inputText = ""
+            )
+        } else {
+            uiState.copy(
+                sourceLang = uiState.targetLang,
+                targetLang = uiState.sourceLang,
+                inputText = uiState.translatedText,
+                translatedText = uiState.inputText
+            )
+        }
     }
 
     fun onSourceLanguageChange(language: Language) {
@@ -72,9 +80,9 @@ class TranslatorViewModel @Inject constructor(val repository: TranslationReposit
         }
     }
 
-    // TODO: onPasteClick()
-    // TODO: onCopyClick()
-    // TODO: onTtsClick()
+    fun onTtsClick(text: String, language: Language) {
+        // TODO: реализовать TTS
+    }
 
     fun onClearClick() {
         uiState = uiState.copy(
