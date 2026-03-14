@@ -24,6 +24,6 @@ class MainActivity : ComponentActivity() {
 
 @Preview(showSystemUi = true)
 @Composable
-fun AppPreview() {
+private fun AppPreview() {
     AppNavigation()
 }
