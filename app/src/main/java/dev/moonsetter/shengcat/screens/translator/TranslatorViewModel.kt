@@ -32,7 +32,7 @@ class TranslatorViewModel @Inject constructor(val repository: TranslationReposit
             uiState.copy(
                 sourceLang = uiState.targetLang,
                 targetLang = uiState.sourceLang,
-                inputText = ""
+                inputText = uiState.inputText
             )
         } else {
             uiState.copy(
