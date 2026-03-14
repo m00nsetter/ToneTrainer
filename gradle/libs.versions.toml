@@ -2,6 +2,7 @@
 agp = "9.0.1"
 coreKtx = "1.17.0"
 hiltAndroid = "2.59.2"
+hiltNavigationCompose = "1.3.0"
 jiebaAnalysis = "1.0.2"
 junit = "4.13.2"
 junitVersion = "1.3.0"
@@ -24,6 +25,7 @@ translate = "17.0.3"
 [libraries]
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
