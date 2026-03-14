@@ -67,8 +67,6 @@ fun AppNavigation() {
     val showBottomBar = currentRoute !in hideBottomBarRoutes
 
     Scaffold(
-        // TODO: top app bar
-
         bottomBar = {
             if (showBottomBar) {
                 NavigationBar {
@@ -96,8 +94,11 @@ fun AppNavigation() {
         {
             composable(route = Screen.Main.route){ MainScreen() }
             composable(route = Screen.Phrasebook.route){ PhrasebookScreen() }
-            composable(route = Screen.Translator.route){ TranslatorScreen() }
-            composable(route = Screen.TranslatorHistory.route){ TranslatorHistoryScreen() }
+            composable(route = Screen.Translator.route){ 
+                TranslatorScreen(
+                    onNavigateToHistory = { navController.navigate(Screen.TranslatorHistory.route) }
+                ) 
+            }
             composable(route = Screen.Practice.route){ PracticeScreen() }
             composable(route = Screen.PracticeRecognition.route){ PracticeRecognitionScreen() }
             composable(route = Screen.PracticePronunciation.route){ PracticePronunciationScreen() }
