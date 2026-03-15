@@ -27,6 +27,14 @@ class TranslatorViewModel @Inject constructor(val repository: TranslationReposit
     var uiState by mutableStateOf(TranslatorUiState())
     private set
 
+    fun onSourceLanguageChange(language: Language) {
+        uiState = uiState.copy(sourceLang = language)
+    }
+
+    fun onTargetLanguageChange(language: Language) {
+        uiState = uiState.copy(targetLang = language)
+    }
+
     fun onLanguageSwapClick() {
         uiState = if (uiState.translatedText.isBlank()) {
             uiState.copy(
@@ -44,12 +52,20 @@ class TranslatorViewModel @Inject constructor(val repository: TranslationReposit
         }
     }
 
-    fun onSourceLanguageChange(language: Language) {
-        uiState = uiState.copy(sourceLang = language)
+    fun getSourceOptions(): List<Language> {
+        return if (uiState.targetLang == Language.CHINESE) {
+            listOf(Language.ENGLISH, Language.RUSSIAN)
+        } else {
+            listOf(Language.CHINESE)
+        }
     }
 
-    fun onTargetLanguageChange(language: Language) {
-        uiState = uiState.copy(targetLang = language)
+    fun getTargetOptions(): List<Language> {
+        return if (uiState.sourceLang == Language.CHINESE) {
+            listOf(Language.ENGLISH, Language.RUSSIAN)
+        } else {
+            listOf(Language.CHINESE)
+        }
     }
 
     fun onInputTextChange(newText: String) {
