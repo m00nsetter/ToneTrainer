@@ -11,4 +11,14 @@
     <string name="zh_language">Китайский</string>
     <string name="eng_language">Английский</string>
     <string name="ru_language">Русский</string>
+    <string name="error">Ошибка</string>
+    <string name="translation">Перевод</string>
+    <string name="pinyin">Пиньинь</string>
+    <string name="copy">Копировать</string>
+    <string name="paste">Вставить</string>
+    <string name="tts">Озвучить</string>
+    <string name="swap_languages">Поменять языки</string>
+    <string name="translate">Перевести</string>
+    <string name="clear">Очистить</string>
+    <string name="enter_text">Введите текст</string>
 </resources>

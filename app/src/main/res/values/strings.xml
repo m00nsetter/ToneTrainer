@@ -15,4 +15,15 @@
     <string name="zh_language">Chinese</string>
     <string name="eng_language">English</string>
     <string name="ru_language">Russian</string>
+
+    <string name="error">Error</string>
+    <string name="translation">Translation</string>
+    <string name="pinyin">Pinyin</string>
+    <string name="copy">Copy</string>
+    <string name="paste">Paste</string>
+    <string name="tts">Voice</string>
+    <string name="swap_languages">Swap languages</string>
+    <string name="translate">Translate</string>
+    <string name="clear">Clear</string>
+    <string name="enter_text">Enter text</string>
 </resources>
