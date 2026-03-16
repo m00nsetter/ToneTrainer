@@ -1,14 +1,18 @@
 package dev.moonsetter.shengcat.screens.translator
 
+import android.content.Context
+import android.speech.tts.TextToSpeech
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.moonsetter.shengcat.data.repository.TranslationRepository
 import dev.moonsetter.shengcat.model.*
 import kotlinx.coroutines.launch
+import java.util.Locale
 import javax.inject.Inject
 
 data class TranslatorUiState (
@@ -23,9 +27,21 @@ data class TranslatorUiState (
 )
 
 @HiltViewModel
-class TranslatorViewModel @Inject constructor(val repository: TranslationRepository): ViewModel() {
+class TranslatorViewModel @Inject constructor(
+    private val repository: TranslationRepository,
+    @ApplicationContext private val context: Context
+): ViewModel() {
     var uiState by mutableStateOf(TranslatorUiState())
     private set
+
+    private var tts: TextToSpeech? = null
+    private var isTtsReady = false
+
+    init {
+        tts = TextToSpeech(context) { status ->
+            isTtsReady = status == TextToSpeech.SUCCESS
+        }
+    }
 
     fun onSourceLanguageChange(language: Language) {
         uiState = uiState.copy(sourceLang = language)
@@ -96,10 +112,6 @@ class TranslatorViewModel @Inject constructor(val repository: TranslationReposit
         }
     }
 
-    fun onTtsClick(text: String, language: Language) {
-        // TODO: реализовать TTS
-    }
-
     fun onClearClick() {
         uiState = uiState.copy(
             inputText = "",
@@ -107,5 +119,21 @@ class TranslatorViewModel @Inject constructor(val repository: TranslationReposit
             pinyin = null,
             translationError = null
         )
+    }
+
+    fun onTtsClick(text: String, language: Language) {
+        if (!isTtsReady || text.isBlank()) return
+        val locale = when (language) {
+            Language.CHINESE -> Locale.forLanguageTag("zh-CN")
+            Language.ENGLISH -> Locale.forLanguageTag("en")
+            Language.RUSSIAN -> Locale.forLanguageTag("ru")
+        }
+        tts?.language = locale
+        tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, "tts_utterance")
+    }
+
+    override fun onCleared() {
+        tts?.shutdown()
+        super.onCleared()
     }
 }
