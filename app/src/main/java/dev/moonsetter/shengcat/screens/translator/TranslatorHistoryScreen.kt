@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import java.time.format.DateTimeFormatter
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import dev.moonsetter.shengcat.R
 import dev.moonsetter.shengcat.data.db.entity.TranslationEntity
@@ -104,7 +105,7 @@ fun HistoryItem(entity: TranslationEntity) {
                     color = MaterialTheme.colorScheme.secondary
                 )
                 Text(
-                    text = entity.date.toString(),
+                    text = entity.date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.secondary
                 )
