@@ -21,4 +21,5 @@
     <string name="translate">Перевести</string>
     <string name="clear">Очистить</string>
     <string name="enter_text">Введите текст</string>
+    <string name="no_history">История переводов пуста</string>
 </resources>
