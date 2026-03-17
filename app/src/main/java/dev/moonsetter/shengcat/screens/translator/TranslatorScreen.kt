@@ -46,7 +46,7 @@ fun TranslatorScreen(
         modifier = modifier
             .fillMaxSize()
             .pointerInput(Unit) { detectTapGestures { focusManager.clearFocus() } }
-            .padding(16.dp)
+            .padding(16.dp, 0.dp)
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -97,6 +97,10 @@ fun TranslatorScreen(
                     minLines = 6,
                     maxLines = 6,
                     modifier = Modifier.fillMaxWidth(),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedContainerColor = MaterialTheme.colorScheme.surface,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.surface
+                    ),
                     // кнопка очистить
                     trailingIcon = {
                         IconButton(
@@ -110,7 +114,6 @@ fun TranslatorScreen(
 
                     }
                 )
-
                 // ряд кнопок
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -177,7 +180,7 @@ fun TranslatorScreen(
         if (!uiState.pinyin.isNullOrEmpty()) {
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
             ) {
                 Column(
                     modifier = Modifier
@@ -194,8 +197,8 @@ fun TranslatorScreen(
                     // транскрипция
                     Text (
                         text = uiState.pinyin,
-                        maxLines = 7,
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSecondaryContainer
                     )
                     // кнопка копировать
                     IconButton(
@@ -222,7 +225,12 @@ fun TranslatorScreen(
         if (uiState.translatedText.isNotEmpty() || uiState.translationError != null) {
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                colors = CardDefaults.cardColors(
+                    containerColor = if (uiState.translationError != null)
+                        MaterialTheme.colorScheme.errorContainer
+                    else
+                        MaterialTheme.colorScheme.primaryContainer
+                )
             ) {
                 Column(
                     modifier = Modifier
@@ -234,12 +242,17 @@ fun TranslatorScreen(
                     Text (
                         text = if (uiState.translationError != null) stringResource(R.string.error) else stringResource(R.string.translation),
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.secondary
+                        color = if (uiState.translationError != null)
+                            MaterialTheme.colorScheme.error
+                        else MaterialTheme.colorScheme.primary
                     )
                     // перевод
                     Text (
                         text = uiState.translationError ?: uiState.translatedText,
-                        style = MaterialTheme.typography.bodyLarge
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = if (uiState.translationError != null)
+                            MaterialTheme.colorScheme.onErrorContainer
+                        else MaterialTheme.colorScheme.onPrimaryContainer,
                     )
                     // если ошибки нет, добавляется ряд кнопок
                     if (uiState.translationError == null) {
@@ -249,13 +262,11 @@ fun TranslatorScreen(
                         ) {
                             // кнопка озвучить
                             IconButton(
-                                onClick = { viewModel.onTtsClick(uiState.translatedText, uiState.targetLang) },
-                                modifier = Modifier.size(48.dp)
+                                onClick = { viewModel.onTtsClick(uiState.translatedText, uiState.targetLang) }
                             ) {
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Outlined.VolumeUp,
-                                    contentDescription = stringResource(R.string.tts),
-                                    modifier = Modifier.size(24.dp)
+                                    contentDescription = stringResource(R.string.tts)
                                 )
                             }
                             // кнопка копировать
@@ -267,13 +278,11 @@ fun TranslatorScreen(
                                         )
                                         clipboardManager.setClipEntry(clipEntry)
                                     }
-                                },
-                                modifier = Modifier.size(48.dp)
+                                }
                             ) {
                                 Icon(
                                     imageVector = Icons.Outlined.ContentCopy,
-                                    contentDescription = stringResource(R.string.copy),
-                                    modifier = Modifier.size(24.dp)
+                                    contentDescription = stringResource(R.string.copy)
                                 )
                             }
                         }
@@ -281,6 +290,7 @@ fun TranslatorScreen(
                 }
             }
         }
+        Spacer(Modifier.width(16.dp))
     }
 }
 
@@ -306,7 +316,6 @@ fun LanguageDropdown(
             value = stringResource(selectedLanguage.displayName()),
             onValueChange = {},
             readOnly = true,
-//            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
             modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, true)
         )
         ExposedDropdownMenu(
