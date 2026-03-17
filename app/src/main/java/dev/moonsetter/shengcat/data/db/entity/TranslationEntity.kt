@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import dev.moonsetter.shengcat.model.Language
 import dev.moonsetter.shengcat.model.TranslationEngine
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Entity(tableName="translation_table")
 data class TranslationEntity(
@@ -15,5 +15,5 @@ data class TranslationEntity(
     val sourceLang: Language,
     val targetLang: Language,
     val engine: TranslationEngine,
-    val date: LocalDate
+    val date: LocalDateTime
 )

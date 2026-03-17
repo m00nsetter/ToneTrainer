@@ -3,7 +3,7 @@ package dev.moonsetter.shengcat.data.db.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import dev.moonsetter.shengcat.model.PracticeMode
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Entity(tableName="practice_result_table")
 data class PracticeResultEntity(
@@ -11,5 +11,5 @@ data class PracticeResultEntity(
     val totalQuestions: Int,
     val score: Int,
     val practiceMode: PracticeMode,
-    val date: LocalDate
+    val date: LocalDateTime
 )

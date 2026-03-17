@@ -10,7 +10,7 @@ import dev.moonsetter.shengcat.data.db.entity.TranslationEntity
 
 @TypeConverters(Converters::class)
 @Database(
-    version = 1,
+    version = 2,
     entities = [
         TranslationEntity::class,
         PracticeResultEntity::class

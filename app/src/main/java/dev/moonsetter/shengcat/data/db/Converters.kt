@@ -4,16 +4,17 @@ import androidx.room.TypeConverter
 import dev.moonsetter.shengcat.model.Language
 import dev.moonsetter.shengcat.model.PracticeMode
 import dev.moonsetter.shengcat.model.TranslationEngine
-import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 class Converters {
     @TypeConverter
-    fun fromLocalDate(date: LocalDate): Long {
-        return date.toEpochDay()
+    fun fromLocalDate(date: LocalDateTime): Long {
+        return date.toEpochSecond(ZoneOffset.UTC)
     }
     @TypeConverter
-    fun toLocalDate(epoch: Long): LocalDate {
-        return LocalDate.ofEpochDay(epoch)
+    fun toLocalDate(epoch: Long): LocalDateTime {
+        return LocalDateTime.ofEpochSecond(epoch, 0, ZoneOffset.UTC)
     }
 
     @TypeConverter

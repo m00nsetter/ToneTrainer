@@ -133,7 +133,7 @@ fun HistoryItem(entity: TranslationEntity) {
                     color = MaterialTheme.colorScheme.secondary
                 )
                 Text(
-                    text = entity.date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")),
+                    text = entity.date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.secondary
                 )

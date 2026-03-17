@@ -8,7 +8,7 @@ import dev.moonsetter.shengcat.model.Language
 import dev.moonsetter.shengcat.model.TranslationEngine
 import javax.inject.Inject
 import javax.inject.Singleton
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Singleton
 class TranslationRepository @Inject constructor(
@@ -36,7 +36,7 @@ class TranslationRepository @Inject constructor(
                 sourceLang = from,
                 targetLang = to,
                 engine = TranslationEngine.MLKIT,
-                date = LocalDate.now()
+                date = LocalDateTime.now()
             )
         )
 
