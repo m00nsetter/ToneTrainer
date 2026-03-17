@@ -99,7 +99,11 @@ fun AppNavigation() {
                     onNavigateToHistory = { navController.navigate(Screen.TranslatorHistory.route) }
                 )
             }
-            composable(route = Screen.TranslatorHistory.route){ TranslatorHistoryScreen() }
+            composable(route = Screen.TranslatorHistory.route){
+                TranslatorHistoryScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
             composable(route = Screen.Practice.route){ PracticeScreen() }
             composable(route = Screen.PracticeRecognition.route){ PracticeRecognitionScreen() }
             composable(route = Screen.PracticePronunciation.route){ PracticePronunciationScreen() }
