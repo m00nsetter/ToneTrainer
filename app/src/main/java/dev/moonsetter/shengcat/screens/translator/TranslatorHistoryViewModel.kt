@@ -12,7 +12,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class TranslatorHistoryUiState(
-    val translationHistory: List<TranslationEntity> = emptyList()
+    val translationHistory: List<TranslationEntity> = emptyList(),
+    val showConfirmDialog: Boolean = false
 )
 
 @HiltViewModel
@@ -31,8 +32,17 @@ class TranslatorHistoryViewModel @Inject constructor(
     }
 
     fun onClearClick() {
+        uiState = uiState.copy(showConfirmDialog = true)
+    }
+
+    fun onClearConfirmed() {
         viewModelScope.launch {
             repository.clearHistory()
+            uiState = uiState.copy(showConfirmDialog = false)
         }
+    }
+
+    fun onClearDismissed() {
+        uiState = uiState.copy(showConfirmDialog = false)
     }
 }

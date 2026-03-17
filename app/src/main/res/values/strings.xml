@@ -28,4 +28,7 @@
     <string name="enter_text">Enter text</string>
     <string name="no_history">Translation history is empty</string>
     <string name="back">Back</string>
+    <string name="clear_translator_history">Clear translator history?</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
 </resources>

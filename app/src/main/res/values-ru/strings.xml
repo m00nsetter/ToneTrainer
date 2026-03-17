@@ -23,4 +23,7 @@
     <string name="enter_text">Введите текст</string>
     <string name="no_history">История переводов пуста</string>
     <string name="back">Назад</string>
+    <string name="clear_translator_history">Очистить историю переводчика?</string>
+    <string name="confirm">Подтвердить</string>
+    <string name="cancel">Отменить</string>
 </resources>
