@@ -21,11 +21,13 @@ import androidx.compose.material.icons.outlined.Translate
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.ClipEntry
 import androidx.compose.ui.platform.LocalClipboard
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import dev.moonsetter.shengcat.R
+import dev.moonsetter.shengcat.data.repository.pinyinToPalladius
 import dev.moonsetter.shengcat.model.Language
 import dev.moonsetter.shengcat.model.displayName
 import kotlinx.coroutines.launch
@@ -129,7 +131,11 @@ fun TranslatorScreen(
                     }
                     // кнопка перевести
                     Button(
-                        onClick = { viewModel.onTranslateClick() },
+                        onClick = {
+                            scope.launch {
+                                viewModel.onTranslateClick()
+                            }
+                        },
                         modifier = Modifier.weight(1f),
                         enabled = uiState.inputText.isNotBlank() && !uiState.isLoading
                     ) {
@@ -147,15 +153,6 @@ fun TranslatorScreen(
                             Text(stringResource(R.string.translate))
                         }
                     }
-//                    // кнопка озвучить
-//                    IconButton(
-//                        onClick = { viewModel.onTtsClick(uiState.inputText, uiState.sourceLang) },
-//                    ) {
-//                        Icon(
-//                            imageVector = Icons.AutoMirrored.Outlined.VolumeUp,
-//                            contentDescription = stringResource(R.string.tts)
-//                        )
-//                    }
                     // кнопка вставить
                     IconButton(
                         onClick = {
@@ -169,7 +166,7 @@ fun TranslatorScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.ContentPaste,
-                            contentDescription = stringResource(R.string.copy)
+                            contentDescription = stringResource(R.string.paste)
                         )
                     }
                 }
@@ -177,48 +174,8 @@ fun TranslatorScreen(
         }
 
         // блок: транскрипция
-        if (!uiState.pinyin.isNullOrEmpty()) {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .padding(12.dp)
-                        .fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    // заголовок
-                    Text (
-                        text = stringResource(R.string.pinyin),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.secondary
-                    )
-                    // транскрипция
-                    Text (
-                        text = uiState.pinyin,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer
-                    )
-                    // кнопка копировать
-                    IconButton(
-                        onClick = {
-                            scope.launch {
-                                val clipEntry = ClipEntry(
-                                    ClipData.newPlainText("pinyin", uiState.pinyin)
-                                )
-                                clipboardManager.setClipEntry(clipEntry)
-                            }
-                        },
-                        modifier = Modifier.align(Alignment.End)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.ContentCopy,
-                            contentDescription = stringResource(R.string.copy),
-                        )
-                    }
-                }
-            }
+        if (uiState.sourceLang == Language.CHINESE && !uiState.pinyin.isNullOrEmpty()) {
+            TranscriptionCard(pinyin = uiState.pinyin)
         }
 
         // блок: перевод
@@ -273,10 +230,7 @@ fun TranslatorScreen(
                             IconButton(
                                 onClick = {
                                     scope.launch {
-                                        val clipEntry = ClipEntry(
-                                            ClipData.newPlainText("translation", uiState.translatedText)
-                                        )
-                                        clipboardManager.setClipEntry(clipEntry)
+                                        clipboardManager.setClipEntry(ClipEntry(ClipData.newPlainText("translation", uiState.translatedText)))
                                     }
                                 }
                             ) {
@@ -290,6 +244,12 @@ fun TranslatorScreen(
                 }
             }
         }
+
+        // блок: транскрипция
+        if (uiState.targetLang == Language.CHINESE && !uiState.pinyin.isNullOrEmpty()) {
+            TranscriptionCard(pinyin = uiState.pinyin)
+        }
+
         Spacer(Modifier.width(16.dp))
     }
 }
@@ -332,6 +292,86 @@ fun LanguageDropdown(
                         expanded = false
                     }
                 )
+            }
+        }
+    }
+}
+
+@Composable
+fun TranscriptionCard(
+    pinyin: String,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val clipboardManager = LocalClipboard.current
+
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        // блок: пиньинь
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+        ) {
+            Column(
+                modifier = Modifier.padding(12.dp).fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.pinyin),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+                Text(
+                    text = pinyin,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                )
+                IconButton(
+                    onClick = {
+                        scope.launch {
+                            clipboardManager.setClipEntry(ClipEntry(ClipData.newPlainText("pinyin", pinyin)))
+                        }
+                    },
+                    modifier = Modifier.align(Alignment.End)
+                ) {
+                    Icon(Icons.Outlined.ContentCopy, contentDescription = stringResource(R.string.copy))
+                }
+            }
+        }
+
+        // блок: палладий
+        val palladius = pinyinToPalladius(pinyin, context)
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+        ) {
+            Column(
+                modifier = Modifier.padding(12.dp).fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.palladius),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+                Text(
+                    text = palladius,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                )
+                IconButton(
+                    onClick = {
+                        scope.launch {
+                            clipboardManager.setClipEntry(ClipEntry(ClipData.newPlainText("palladius", palladius)))
+                        }
+                    },
+                    modifier = Modifier.align(Alignment.End)
+                ) {
+                    Icon(Icons.Outlined.ContentCopy, contentDescription = stringResource(R.string.copy))
+                }
             }
         }
     }

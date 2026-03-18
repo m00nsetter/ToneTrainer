@@ -23,7 +23,8 @@ data class TranslatorUiState (
     val translatedText: String = "",
     val pinyin: String? = null,
     val translationError: String? = null,
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val transcriptionFormat: TranscriptionFormat = TranscriptionFormat.PINYIN // TODO: выбор типа транскрипции в настройках
 )
 
 @HiltViewModel
