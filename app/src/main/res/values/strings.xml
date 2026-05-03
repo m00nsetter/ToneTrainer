@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name" translatable="false">ShengCat</string>
     <string name="app_title" translatable="false">声Cat</string>
-
     <string name="main_screen_name">Main</string>
     <string name="phrasebook_screen_name">Phrases</string>
     <string name="translator_screen_name">Translator</string>
@@ -11,11 +10,9 @@
     <string name="practice_pronunciation_screen_name">Tone pronunciation</string>
     <string name="practice_history_screen_name">History</string>
     <string name="settings_screen_name">Settings</string>
-
     <string name="zh_language">Chinese</string>
     <string name="eng_language">English</string>
     <string name="ru_language">Russian</string>
-
     <string name="error">Error</string>
     <string name="translation">Translation</string>
     <string name="pinyin">Pinyin</string>
@@ -32,4 +29,5 @@
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
     <string name="palladius">Palladius</string>
+    <string name="audioRecordFailed" translatable="false">AudioRecord failed to initialize</string>
 </resources>
