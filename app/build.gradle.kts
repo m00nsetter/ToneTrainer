@@ -52,6 +52,8 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.material3)
+    implementation(files("..\\libs\\core-2.5.jar"))
+    implementation(files("..\\libs\\jvm-2.5.jar"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -76,4 +78,5 @@ dependencies {
     implementation(libs.translate)
     implementation(libs.pinyin4j)
     implementation(libs.jieba.analysis)
+    implementation(libs.androidx.datastore.preferences)
 }

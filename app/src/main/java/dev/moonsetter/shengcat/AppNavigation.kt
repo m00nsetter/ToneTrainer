@@ -2,7 +2,6 @@ package dev.moonsetter.shengcat
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ChatBubbleOutline
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Translate
 import androidx.compose.material.icons.outlined.MusicNote
@@ -21,14 +20,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import dev.moonsetter.shengcat.screens.main.*
-import dev.moonsetter.shengcat.screens.phrasebook.*
 import dev.moonsetter.shengcat.screens.practice.*
 import dev.moonsetter.shengcat.screens.settings.*
 import dev.moonsetter.shengcat.screens.translator.*
 
 sealed class Screen(val route: String) {
     object Main : Screen("main_screen")
-    object Phrasebook : Screen("phrasebook_screen")
+//    object Phrasebook : Screen("phrasebook_screen")
     object Translator : Screen("translator_screen")
     object TranslatorHistory : Screen("translator_history_screen")
     object Practice : Screen("practice_screen")
@@ -51,7 +49,7 @@ fun AppNavigation() {
 
     val navItems = listOf(
         NavItem(Screen.Main.route, Icons.Outlined.Home, R.string.main_screen_name),
-        NavItem(Screen.Phrasebook.route, Icons.Outlined.ChatBubbleOutline, R.string.phrasebook_screen_name),
+//        NavItem(Screen.Phrasebook.route, Icons.Outlined.ChatBubbleOutline, R.string.phrasebook_screen_name),
         NavItem(Screen.Translator.route, Icons.Outlined.Translate, R.string.translator_screen_name),
         NavItem(Screen.Practice.route, Icons.Outlined.MusicNote, R.string.practice_screen_name),
         NavItem(Screen.Settings.route, Icons.Outlined.Settings, R.string.settings_screen_name)
@@ -93,7 +91,7 @@ fun AppNavigation() {
         NavHost(navController = navController, startDestination = Screen.Main.route, modifier = Modifier.padding(paddingValues))
         {
             composable(route = Screen.Main.route){ MainScreen() }
-            composable(route = Screen.Phrasebook.route){ PhrasebookScreen() }
+//            composable(route = Screen.Phrasebook.route){ PhrasebookScreen() }
             composable(route = Screen.Translator.route){ 
                 TranslatorScreen(
                     onNavigateToHistory = { navController.navigate(Screen.TranslatorHistory.route) }
@@ -104,10 +102,28 @@ fun AppNavigation() {
                     onNavigateBack = { navController.popBackStack() }
                 )
             }
-            composable(route = Screen.Practice.route){ PracticeScreen() }
-            composable(route = Screen.PracticeRecognition.route){ PracticeRecognitionScreen() }
-            composable(route = Screen.PracticePronunciation.route){ PracticePronunciationScreen() }
-            composable(route = Screen.PracticeHistory.route){ PracticeHistoryScreen() }
+            composable(route = Screen.Practice.route) {
+                PracticeScreen(
+                    onNavigateToPronunciation = { navController.navigate(Screen.PracticePronunciation.route) },
+                    onNavigateToRecognition = { navController.navigate(Screen.PracticeRecognition.route) },
+                    onNavigateToHistory = { navController.navigate(Screen.PracticeHistory.route) }
+                )
+            }
+            composable(route = Screen.PracticePronunciation.route) {
+                PracticePronunciationScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+            composable(route = Screen.PracticeRecognition.route) {
+                PracticeRecognitionScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+            composable(route = Screen.PracticeHistory.route) {
+                PracticeHistoryScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
             composable(route = Screen.Settings.route){ SettingsScreen() }
         }
     }

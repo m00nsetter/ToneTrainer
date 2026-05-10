@@ -1,4 +1,5 @@
 <resources>
+    <!-- навигация -->
     <string name="main_screen_name">Главная</string>
     <string name="phrasebook_screen_name">Фразы</string>
     <string name="translator_screen_name">Переводчик</string>
@@ -8,23 +9,89 @@
     <string name="practice_pronunciation_screen_name">Произношение тонов</string>
     <string name="practice_history_screen_name">История</string>
     <string name="settings_screen_name">Настройки</string>
+
+    <!-- языки -->
     <string name="zh_language">Китайский</string>
     <string name="eng_language">Английский</string>
     <string name="ru_language">Русский</string>
+
+    <!-- общие -->
     <string name="error">Ошибка</string>
-    <string name="translation">Перевод</string>
-    <string name="pinyin">Пиньинь</string>
+    <string name="back">Назад</string>
+    <string name="confirm">Подтвердить</string>
+    <string name="cancel">Отменить</string>
+    <string name="clear">Очистить</string>
     <string name="copy">Копировать</string>
     <string name="paste">Вставить</string>
     <string name="tts">Озвучить</string>
+
+    <!-- переводчик -->
+    <string name="translation">Перевод</string>
+    <string name="pinyin">Пиньинь</string>
+    <string name="palladius">Палладица</string>
     <string name="swap_languages">Поменять языки</string>
     <string name="translate">Перевести</string>
-    <string name="clear">Очистить</string>
     <string name="enter_text">Введите текст</string>
     <string name="no_history">История переводов пуста</string>
-    <string name="back">Назад</string>
     <string name="clear_translator_history">Очистить историю переводчика?</string>
-    <string name="confirm">Подтвердить</string>
-    <string name="cancel">Отменить</string>
-    <string name="palladius">Палладица</string>
+
+    <!-- практика: экран выбора -->
+    <string name="practice_screen_subtitle">Выберите режим практики для тренировки тонов китайского языка</string>
+    <string name="practice_pronunciation_description">Прочитайте слог вслух и посмотрите, насколько ваш тон соответствует эталонному контуру</string>
+    <string name="practice_recognition_description">Слушайте озвученные слоги и определяйте, какой тон вы слышите</string>
+
+    <!-- практика: произношение -->
+    <string name="tone_number">Тон %d</string>
+    <string name="practice_listen">Прослушать</string>
+    <string name="practice_record">Записать</string>
+    <string name="practice_stop">Остановить</string>
+    <string name="practice_next">Далее</string>
+    <string name="practice_finish">Завершить</string>
+    <string name="practice_repeat">Повторить</string>
+    <string name="practice_pitch_chart">Контур тона</string>
+    <string name="practice_reference_contour">Эталон</string>
+    <string name="practice_your_contour">Ваш голос</string>
+    <string name="practice_result_correct">Верно</string>
+    <string name="practice_result_incorrect">Неверно</string>
+    <string name="practice_similarity">Схожесть: %d%%</string>
+
+    <string name="practice_correct_tone">Правильный ответ: Тон %d</string>
+
+    <!-- практика: результаты сессии -->
+    <string name="practice_exit_title">Завершить практику?</string>
+    <string name="practice_exit_message">Ваш прогресс не будет сохранён</string>
+    <string name="practice_repeat_title">Повторить эту сессию?</string>
+    <string name="practice_session_done">Сессия завершена!</string>
+    <string name="practice_session_score">Результат: %1$d / %2$d</string>
+    <string name="practice_tone_breakdown">Разбивка по тонам</string>
+    <string name="practice_tone_score">Тон %1$d: %2$d / %3$d</string>
+
+    <!-- практика: история -->
+    <string name="clear_practice_history">Очистить историю практики?</string>
+    <string name="no_practice_history">История практики пуста</string>
+
+    <string name="settings_language">Язык интерфейса</string>
+    <string name="settings_theme">Тема оформления</string>
+    <string name="settings_theme_system">Системная</string>
+    <string name="settings_theme_light">Светлая</string>
+    <string name="settings_theme_dark">Тёмная</string>
+    <string name="settings_data">Данные</string>
+    <string name="settings_reset_button">Сбросить все данные</string>
+    <string name="settings_reset_title">Сбросить все данные?</string>
+    <string name="settings_reset_message">Это удалит всю историю переводов и практики</string>
+
+    <string name="main_subtitle">Тренажёр тонов китайского языка</string>
+    <string name="main_how_to_use_title">Как пользоваться</string>
+    <string name="main_how_to_use_step1">Откройте вкладку «Тоны», чтобы начать сессию практики</string>
+    <string name="main_how_to_use_step2">В режиме произношения читайте слог вслух и сравнивайте свой тон с эталонным контуром</string>
+    <string name="main_how_to_use_step3">В режиме распознавания слушайте слог и выбирайте правильный тон</string>
+    <string name="main_how_to_use_step4">Используйте переводчик для поиска слов и прослушивания их произношения</string>
+    <string name="main_tones_title">Тоны китайского языка</string>
+    <string name="main_tones_description">В мандаринском китайском языке четыре тона. Один и тот же слог, произнесённый с разным тоном, имеет совершенно разное значение. Например: mā (мать), má (конопля), mǎ (лошадь), mà (ругать).</string>
+    <string name="main_tone1_name">Ровный</string>
+    <string name="main_tone2_name">Восходящий</string>
+    <string name="main_tone3_name">Изгибающийся</string>
+    <string name="main_tone4_name">Нисходящий</string>
+    <string name="main_about_title">О приложении</string>
+    <string name="main_about_description">ShengCat помогает освоить тоны мандаринского китайского через практику слушания и произношения. Тренируйте слух в режиме распознавания и голос в режиме произношения — оба режима используют анализ звука в реальном времени.</string>
 </resources>

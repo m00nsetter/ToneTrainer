@@ -1,5 +1,10 @@
 package dev.moonsetter.shengcat.data.audio
 
+import be.tarsos.dsp.AudioEvent
+import be.tarsos.dsp.pitch.PitchDetectionHandler
+import be.tarsos.dsp.pitch.PitchProcessor
+import be.tarsos.dsp.pitch.PitchProcessor.PitchEstimationAlgorithm
+import be.tarsos.dsp.io.TarsosDSPAudioFormat
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -7,55 +12,35 @@ import javax.inject.Singleton
 class PitchDetector @Inject constructor() {
 
     private val sampleRate: Int = 44100
-    private val threshold: Float = 0.15f
+    private val frameSize: Int = 2048
     private val minFrequency: Float = 80f
     private val maxFrequency: Float = 800f
 
-    fun detect(frame: FloatArray): Float? {
-        if (frame.size < 1024) return null
+    private val format = TarsosDSPAudioFormat(
+        sampleRate.toFloat(),
+        16,
+        1,
+        true,
+        false
+    )
 
-        val halfSize = frame.size / 2
-        val cmnd = FloatArray(halfSize)
+    private var lastPitch: Float? = null
 
-        cmnd[0] = 1f
-        var runningSum = 0f
-        for (tau in 1 until halfSize) {
-            var diff = 0f
-            for (j in 0 until halfSize) {
-                val delta = frame[j] - frame[j + tau]
-                diff += delta * delta
-            }
-            runningSum += diff
-            cmnd[tau] = if (runningSum == 0f) 0f else diff * tau / runningSum
+    private val pitchProcessor = PitchProcessor(
+        PitchEstimationAlgorithm.YIN,
+        sampleRate.toFloat(),
+        frameSize,
+        PitchDetectionHandler { result, _ ->
+            lastPitch = if (result.isPitched) result.pitch else null
         }
+    )
 
-        var tau = 2
-        while (tau < halfSize - 1) {
-            if (cmnd[tau] < threshold) {
-                while (tau + 1 < halfSize - 1 && cmnd[tau + 1] < cmnd[tau]) {
-                    tau++
-                }
-                break
-            }
-            tau++
-        }
-        if (tau >= halfSize - 1) return null
-
-        val refined = if (tau in 1 until halfSize - 1) {
-            val prev = cmnd[tau - 1]
-            val curr = cmnd[tau]
-            val next = cmnd[tau + 1]
-            val denom = 2f * (2f * curr - prev - next)
-            if (denom == 0f) tau.toFloat()
-            else tau + (next - prev) / denom
-        } else {
-            tau.toFloat()
-        }
-
-        if (refined <= 0f) return null
-        val frequency = sampleRate / refined
-        if (frequency < minFrequency || frequency > maxFrequency) return null
-
-        return frequency
+    fun process(frame: FloatArray): Float? {
+        val audioEvent = AudioEvent(format)
+        audioEvent.floatBuffer = frame
+        pitchProcessor.process(audioEvent)
+        val pitch = lastPitch ?: return null
+        if (pitch !in minFrequency..maxFrequency) return null
+        return pitch
     }
 }

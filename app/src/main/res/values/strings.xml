@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name" translatable="false">ShengCat</string>
     <string name="app_title" translatable="false">声Cat</string>
+
+    <!-- навигация -->
     <string name="main_screen_name">Main</string>
     <string name="phrasebook_screen_name">Phrases</string>
     <string name="translator_screen_name">Translator</string>
@@ -10,24 +12,89 @@
     <string name="practice_pronunciation_screen_name">Tone pronunciation</string>
     <string name="practice_history_screen_name">History</string>
     <string name="settings_screen_name">Settings</string>
+
+    <!-- языки -->
     <string name="zh_language">Chinese</string>
     <string name="eng_language">English</string>
     <string name="ru_language">Russian</string>
+
+    <!-- общие -->
     <string name="error">Error</string>
-    <string name="translation">Translation</string>
-    <string name="pinyin">Pinyin</string>
+    <string name="back">Back</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="clear">Clear</string>
     <string name="copy">Copy</string>
     <string name="paste">Paste</string>
     <string name="tts">Voice</string>
+
+    <!-- переводчик -->
+    <string name="translation">Translation</string>
+    <string name="pinyin">Pinyin</string>
+    <string name="palladius">Palladius</string>
     <string name="swap_languages">Swap languages</string>
     <string name="translate">Translate</string>
-    <string name="clear">Clear</string>
     <string name="enter_text">Enter text</string>
     <string name="no_history">Translation history is empty</string>
-    <string name="back">Back</string>
     <string name="clear_translator_history">Clear translator history?</string>
-    <string name="confirm">Confirm</string>
-    <string name="cancel">Cancel</string>
-    <string name="palladius">Palladius</string>
-    <string name="audioRecordFailed" translatable="false">AudioRecord failed to initialize</string>
+
+    <!-- практика: экран выбора -->
+    <string name="practice_screen_subtitle">Choose a practice mode to train your Chinese tones</string>
+    <string name="practice_pronunciation_description">Read the syllable aloud and see how well your pitch matches the reference tone contour</string>
+    <string name="practice_recognition_description">Listen to voiced syllables and identify which tone you hear</string>
+
+    <!-- практика: произношение -->
+    <string name="tone_number">Tone %d</string>
+    <string name="practice_listen">Listen</string>
+    <string name="practice_record">Record</string>
+    <string name="practice_stop">Stop</string>
+    <string name="practice_next">Next</string>
+    <string name="practice_finish">Finish</string>
+    <string name="practice_repeat">Repeat</string>
+    <string name="practice_pitch_chart">Pitch contour</string>
+    <string name="practice_reference_contour">Reference</string>
+    <string name="practice_your_contour">Your voice</string>
+    <string name="practice_result_correct">Correct</string>
+    <string name="practice_result_incorrect">Incorrect</string>
+    <string name="practice_similarity">Similarity: %d%%</string>
+
+    <string name="practice_correct_tone">Correct answer: Tone %d</string>
+
+    <!-- практика: результаты сессии -->
+    <string name="practice_exit_title">End practice?</string>
+    <string name="practice_exit_message">Your progress won\'t be saved</string>
+    <string name="practice_repeat_title">Repeat this session?</string>
+    <string name="practice_session_done">Session complete!</string>
+    <string name="practice_session_score">Score: %1$d / %2$d</string>
+    <string name="practice_tone_breakdown">Breakdown by tone</string>
+    <string name="practice_tone_score">Tone %1$d: %2$d / %3$d</string>
+
+    <!-- практика: история -->
+    <string name="clear_practice_history">Clear practice history?</string>
+    <string name="no_practice_history">Practice history is empty</string>
+
+    <string name="settings_language">Interface language</string>
+    <string name="settings_theme">Theme</string>
+    <string name="settings_theme_system">System</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_data">Data</string>
+    <string name="settings_reset_button">Reset all data</string>
+    <string name="settings_reset_title">Reset all data?</string>
+    <string name="settings_reset_message">This will permanently delete all translation and practice history</string>
+
+    <string name="main_subtitle">Chinese tone trainer</string>
+    <string name="main_how_to_use_title">How to use</string>
+    <string name="main_how_to_use_step1">Open the Tones tab to start a practice session</string>
+    <string name="main_how_to_use_step2">In Pronunciation mode, read the syllable aloud and compare your pitch to the reference contour</string>
+    <string name="main_how_to_use_step3">In Recognition mode, listen to the syllable and choose the correct tone</string>
+    <string name="main_how_to_use_step4">Use the Translator to look up words and hear their pronunciation</string>
+    <string name="main_tones_title">Chinese tones</string>
+    <string name="main_tones_description">Mandarin Chinese has four tones. The same syllable pronounced with a different tone has a completely different meaning. For example: mā (mother), má (hemp), mǎ (horse), mà (scold).</string>
+    <string name="main_tone1_name">High flat</string>
+    <string name="main_tone2_name">Rising</string>
+    <string name="main_tone3_name">Dipping</string>
+    <string name="main_tone4_name">Falling</string>
+    <string name="main_about_title">About</string>
+    <string name="main_about_description">ShengCat helps you master Mandarin tones through listening and speaking practice. Train your ear with Recognition mode and your voice with Pronunciation mode — both powered by real-time audio analysis.</string>
 </resources>
