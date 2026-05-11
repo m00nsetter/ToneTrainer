@@ -96,42 +96,31 @@ class PronunciationViewModel @Inject constructor(
 
     private fun startRecording() {
         uiState = uiState.copy(isRecording = true, currentPitchPoints = emptyList(), lastResult = null)
-
         autoStopJob = viewModelScope.launch {
-            delay(1500L)
+            delay(2000L)
             stopRecording()
         }
-
         recordingJob = viewModelScope.launch {
-            val pitchPoints = mutableListOf<Float>()
-            try {
-                recorder.record().collect { frame ->
-                    val hz = pitchDetector.process(frame)
-                    if (hz != null) {
-                        pitchPoints.add(hz)
-                        uiState = uiState.copy(currentPitchPoints = pitchPoints.toList())
-                    }
+            recorder.record().collect { frame ->
+                val pitch = pitchDetector.process(frame)
+                if (pitch != null && pitch > 60f) {
+                    // ONLY add the point if it's a valid voice frequency
+                    uiState = uiState.copy(
+                        currentPitchPoints = uiState.currentPitchPoints + pitch
+                    )
                 }
-            } catch (e: Exception) {
-                uiState = uiState.copy(error = e.message, isRecording = false)
             }
         }
     }
 
     fun stopRecording() {
-        autoStopJob?.cancel()
-        autoStopJob = null
         recordingJob?.cancel()
-        recordingJob = null
-
-        val syllable = uiState.currentSyllable ?: run {
-            uiState = uiState.copy(isRecording = false)
-            return
-        }
-
+        val syllable = uiState.currentSyllable ?: return
         val recorded = uiState.currentPitchPoints
+
+        // Validation: Check if we actually caught enough audio data
         if (recorded.size < 5) {
-            uiState = uiState.copy(isRecording = false)
+            uiState = uiState.copy(isRecording = false, error = "Recording too short")
             return
         }
 
@@ -145,7 +134,8 @@ class PronunciationViewModel @Inject constructor(
         uiState = uiState.copy(
             isRecording = false,
             lastResult = result,
-            sessionResults = uiState.sessionResults + result
+            sessionResults = uiState.sessionResults + result,
+            error = null // Clear any previous length errors
         )
     }
 

@@ -375,7 +375,7 @@ private fun PitchContourCard(
             Canvas(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(1f)
+                    .aspectRatio(1.5f)
             ) {
                 val w = size.width
                 val h = size.height
@@ -413,7 +413,7 @@ private fun PitchContourCard(
                         val p1 = points[i + 1]
                         val mx = (p0.x + p1.x) / 2f
                         val my = (p0.y + p1.y) / 2f
-                        path.quadraticBezierTo(p0.x, p0.y, mx, my)
+                        path.quadraticTo(p0.x, p0.y, mx, my)
                     }
                     path.lineTo(points.last().x, points.last().y)
 
@@ -450,7 +450,7 @@ private fun PitchContourCard(
 
                     // сначала сглаживаем точки для отображения
                     val windowSize = 5
-                    val smoothed = recorded.mapIndexed { i, _ ->
+                    val smoothed = List(recorded.size) { i ->
                         val from = maxOf(0, i - windowSize / 2)
                         val to = minOf(recorded.size - 1, i + windowSize / 2)
                         recorded.subList(from, to + 1).average().toFloat()
@@ -514,33 +514,6 @@ private fun PronunciationResultScreen(
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center
         )
-
-//        // разбивка по тонам
-//        Card(
-//            modifier = Modifier.fillMaxWidth(),
-//            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
-//        ) {
-//            Column(
-//                modifier = Modifier.padding(16.dp),
-//                verticalArrangement = Arrangement.spacedBy(8.dp)
-//            ) {
-//                Text(
-//                    text = stringResource(R.string.practice_tone_breakdown),
-//                    style = MaterialTheme.typography.labelSmall,
-//                    color = MaterialTheme.colorScheme.onSurfaceVariant
-//                )
-//                (1..4).forEach { tone ->
-//                    val toneResults = uiState.sessionResults.filter { it.syllable.toneNumber == tone }
-//                    if (toneResults.isNotEmpty()) {
-//                        val correct = toneResults.count { it.similarity >= 0.6f }
-//                        Text(
-//                            text = stringResource(R.string.practice_tone_score, tone, correct, toneResults.size),
-//                            style = MaterialTheme.typography.bodyMedium
-//                        )
-//                    }
-//                }
-//            }
-//        }
 
         Spacer(Modifier.height(8.dp))
 

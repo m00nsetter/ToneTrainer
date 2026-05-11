@@ -10,11 +10,10 @@ import javax.inject.Singleton
 
 @Singleton
 class PitchDetector @Inject constructor() {
-
     private val sampleRate: Int = 44100
     private val frameSize: Int = 2048
-    private val minFrequency: Float = 80f
-    private val maxFrequency: Float = 800f
+    private val minFrequency: Float = 60f
+    private val maxFrequency: Float = 1000f
 
     private val format = TarsosDSPAudioFormat(
         sampleRate.toFloat(),
@@ -31,16 +30,24 @@ class PitchDetector @Inject constructor() {
         sampleRate.toFloat(),
         frameSize,
         PitchDetectionHandler { result, _ ->
-            lastPitch = if (result.isPitched) result.pitch else null
+            // Only accept pitch if it has a reasonable probability of being a voice
+            // result.probability > 0.8f is usually a good threshold for clean audio
+            lastPitch = if (result.pitch > 0f && result.probability > 0.85f) {
+                result.pitch
+            } else {
+                null
+            }
         }
     )
 
     fun process(frame: FloatArray): Float? {
         val audioEvent = AudioEvent(format)
         audioEvent.floatBuffer = frame
+        // Reset lastPitch before processing to ensure we aren't getting old data
+        lastPitch = null
         pitchProcessor.process(audioEvent)
-        val pitch = lastPitch ?: return null
-        if (pitch !in minFrequency..maxFrequency) return null
-        return pitch
+
+        // Filter results to human speech range (60Hz - 1000Hz)
+        return lastPitch?.takeIf { it in minFrequency..maxFrequency }
     }
 }
