@@ -375,12 +375,12 @@ private fun PitchContourCard(
             Canvas(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(1.8f)
+                    .aspectRatio(1f)
             ) {
                 val w = size.width
                 val h = size.height
                 val padLeft = 16.dp.toPx()
-                val padRight = 36.dp.toPx() // место для подписей справа
+                val padRight = 36.dp.toPx()
                 val padTop = 12.dp.toPx()
                 val padBottom = 12.dp.toPx()
                 val drawW = w - padLeft - padRight
@@ -400,16 +400,27 @@ private fun PitchContourCard(
                     val strokeWidth = if (isCurrentTone) 2.5.dp.toPx() else 1.2.dp.toPx()
                     val contourColor = onSurfaceVariant.copy(alpha = contourAlpha)
 
-                    val path = Path()
-                    contour.forEachIndexed { i, value ->
-                        val x = padLeft + i.toFloat() / (contour.size - 1) * drawW
-                        val y = padTop + (1f - value) * drawH
-                        if (i == 0) path.moveTo(x, y) else path.lineTo(x, y)
+                    val points = contour.mapIndexed { i, value ->
+                        Offset(
+                            x = padLeft + i.toFloat() / (contour.size - 1) * drawW,
+                            y = padTop + (1f - value) * drawH
+                        )
                     }
+                    val path = Path()
+                    path.moveTo(points.first().x, points.first().y)
+                    for (i in 0 until points.size - 1) {
+                        val p0 = points[i]
+                        val p1 = points[i + 1]
+                        val mx = (p0.x + p1.x) / 2f
+                        val my = (p0.y + p1.y) / 2f
+                        path.quadraticBezierTo(p0.x, p0.y, mx, my)
+                    }
+                    path.lineTo(points.last().x, points.last().y)
+
                     drawPath(path = path, color = contourColor, style = Stroke(
                         width = strokeWidth,
                         cap = StrokeCap.Round,
-                        join = androidx.compose.ui.graphics.StrokeJoin.Round
+                        join = StrokeJoin.Round
                     ))
 
                     // подпись в конце линии справа
@@ -438,8 +449,11 @@ private fun PitchContourCard(
                     val range = (max - min).takeIf { it > 0f } ?: 1f
 
                     // сначала сглаживаем точки для отображения
-                    val smoothed = recorded.zipWithNext().runningFold(recorded.first()) { acc, (a, b) ->
-                        a * 0.3f + b * 0.7f
+                    val windowSize = 5
+                    val smoothed = recorded.mapIndexed { i, _ ->
+                        val from = maxOf(0, i - windowSize / 2)
+                        val to = minOf(recorded.size - 1, i + windowSize / 2)
+                        recorded.subList(from, to + 1).average().toFloat()
                     }
 
                     val points = smoothed.mapIndexed { i, value ->
@@ -452,13 +466,14 @@ private fun PitchContourCard(
 
                     val userPath = Path()
                     userPath.moveTo(points.first().x, points.first().y)
-
                     for (i in 0 until points.size - 1) {
                         val p0 = points[i]
                         val p1 = points[i + 1]
-                        val cx = (p0.x + p1.x) / 2f
-                        userPath.cubicTo(cx, p0.y, cx, p1.y, p1.x, p1.y)
+                        val mx = (p0.x + p1.x) / 2f
+                        val my = (p0.y + p1.y) / 2f
+                        userPath.quadraticTo(p0.x, p0.y, mx, my)
                     }
+                    userPath.lineTo(points.last().x, points.last().y)
 
                     drawPath(
                         path = userPath,
@@ -471,44 +486,7 @@ private fun PitchContourCard(
                     )
                 }
             }
-
-            // легенда: только эталон + голос
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                LegendItem(
-                    color = onSurfaceVariant.copy(alpha = 0.85f),
-                    label = stringResource(R.string.practice_reference_contour)
-                )
-                LegendItem(
-                    color = recordedColor,
-                    label = stringResource(R.string.practice_your_contour)
-                )
-            }
         }
-    }
-}
-
-@Composable
-private fun LegendItem(color: Color, label: String) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(4.dp)
-    ) {
-        Canvas(modifier = Modifier.size(16.dp, 2.dp)) {
-            drawLine(
-                color = color,
-                start = Offset(0f, size.height / 2),
-                end = Offset(size.width, size.height / 2),
-                strokeWidth = 2.dp.toPx()
-            )
-        }
-        Text(
-            text = label,
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
     }
 }
 

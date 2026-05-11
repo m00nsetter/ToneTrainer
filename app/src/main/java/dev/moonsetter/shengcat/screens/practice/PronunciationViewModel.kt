@@ -17,6 +17,7 @@ import dev.moonsetter.shengcat.data.repository.SyllableRepository
 import dev.moonsetter.shengcat.model.PracticeMode
 import dev.moonsetter.shengcat.model.SyllableItem
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Locale
 import javax.inject.Inject
@@ -79,10 +80,6 @@ class PronunciationViewModel @Inject constructor(
         }
     }
 
-//    fun loadSyllables(syllables: List<SyllableItem>) {
-//        uiState = PronunciationUiState(syllables = syllables.shuffled())
-//    }
-
     fun onPlayReferenceClick() {
         val syllable = uiState.currentSyllable ?: return
         if (!isTtsReady) return
@@ -95,8 +92,16 @@ class PronunciationViewModel @Inject constructor(
         else startRecording()
     }
 
+    private var autoStopJob: Job? = null
+
     private fun startRecording() {
         uiState = uiState.copy(isRecording = true, currentPitchPoints = emptyList(), lastResult = null)
+
+        autoStopJob = viewModelScope.launch {
+            delay(1500L)
+            stopRecording()
+        }
+
         recordingJob = viewModelScope.launch {
             val pitchPoints = mutableListOf<Float>()
             try {
@@ -114,18 +119,24 @@ class PronunciationViewModel @Inject constructor(
     }
 
     fun stopRecording() {
+        autoStopJob?.cancel()
+        autoStopJob = null
         recordingJob?.cancel()
         recordingJob = null
+
         val syllable = uiState.currentSyllable ?: run {
             uiState = uiState.copy(isRecording = false)
             return
         }
+
         val recorded = uiState.currentPitchPoints
-        if (recorded.size < 10) {
+        if (recorded.size < 5) {
             uiState = uiState.copy(isRecording = false)
             return
         }
+
         val similarity = toneAnalyzer.compare(recorded, syllable.toneNumber)
+
         val result = QuestionResult(
             syllable = syllable,
             similarity = similarity,
@@ -173,6 +184,7 @@ class PronunciationViewModel @Inject constructor(
     override fun onCleared() {
         tts?.shutdown()
         recordingJob?.cancel()
+        autoStopJob?.cancel()
         super.onCleared()
     }
 }
