@@ -46,15 +46,27 @@ class ToneAnalyzer @Inject constructor() {
         return cost[n - 1][n - 1]
     }
 
+    // медианный фильтр для сглаживания шума питча
+    private fun smooth(points: List<Float>, windowSize: Int = 5): List<Float> {
+        if (points.size < windowSize) return points
+        return points.mapIndexed { i, _ ->
+            val half = windowSize / 2
+            val from = maxOf(0, i - half)
+            val to = minOf(points.size - 1, i + half)
+            points.subList(from, to + 1).sorted()[( to - from) / 2]
+        }
+    }
+
     // возвращает схожесть 0.0–1.0 между записанным контуром и эталоном
     fun compare(recordedPitch: List<Float>, toneNumber: Int): Float {
         if (recordedPitch.size < 10) return 0f
         val reference = ToneReference.getContour(toneNumber)
-        val normalized = normalize(recordedPitch)
+        val smoothed = smooth(recordedPitch)           // сначала сглаживаем
+        val normalized = normalize(smoothed)           // потом нормализуем
         val resampled = resample(normalized, reference.size)
         val distance = dtw(resampled, reference)
-        // максимально допустимое расстояние при размере 10 точек = 10 * 1.0
-        val maxDistance = reference.size.toFloat()
+        // нормализация: максимальное DTW при размере 10 = ~3.0 на практике
+        val maxDistance = 3.0f
         return (1f - (distance / maxDistance)).coerceIn(0f, 1f)
     }
 }

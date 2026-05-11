@@ -43,7 +43,7 @@ data class RecognitionUiState(
 class RecognitionViewModel @Inject constructor(
     private val syllableRepository: SyllableRepository,
     private val practiceRepository: PracticeRepository,
-    @ApplicationContext private val context: Context
+    @param:ApplicationContext private val context: Context
 ) : ViewModel() {
 
     var uiState by mutableStateOf(RecognitionUiState())
@@ -60,7 +60,7 @@ class RecognitionViewModel @Inject constructor(
             try {
                 val pool = syllableRepository.getPool()
                 uiState = RecognitionUiState(
-                    syllables = pool.shuffled().take(10),
+                    syllables = pool.shuffled(java.util.Random()).take(10),
                     isLoading = false
                 )
                 // автоматически озвучиваем первый слог
@@ -111,7 +111,7 @@ class RecognitionViewModel @Inject constructor(
             try {
                 val pool = syllableRepository.getPool()
                 uiState = RecognitionUiState(
-                    syllables = pool.shuffled().take(10),
+                    syllables = pool.shuffled(java.util.Random()).take(10),
                     isLoading = false
                 )
                 playCurrentSyllable()

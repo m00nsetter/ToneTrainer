@@ -58,7 +58,7 @@
     <string name="practice_result_incorrect">Incorrect</string>
     <string name="practice_similarity">Similarity: %d%%</string>
 
-    <string name="practice_correct_tone">Correct answer: Tone %d</string>
+    <string name="practice_correct_tone">Correct answer: %s</string>
 
     <!-- практика: результаты сессии -->
     <string name="practice_exit_title">End practice?</string>

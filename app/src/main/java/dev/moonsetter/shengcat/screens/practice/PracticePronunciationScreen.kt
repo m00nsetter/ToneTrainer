@@ -1,5 +1,11 @@
 package dev.moonsetter.shengcat.screens.practice
 
+import android.Manifest
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
+import android.content.pm.PackageManager
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
@@ -18,15 +24,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import dev.moonsetter.shengcat.R
 import dev.moonsetter.shengcat.data.audio.ToneReference
-import dev.moonsetter.shengcat.model.SyllableItem
 
 @Composable
 fun PracticePronunciationScreen(
@@ -38,10 +46,23 @@ fun PracticePronunciationScreen(
     var showExitDialog by remember { mutableStateOf(false) }
     var showRepeatDialog by remember { mutableStateOf(false) }
 
+    val context = LocalContext.current
+    var hasAudioPermission by remember {
+        mutableStateOf(
+            ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO)
+                    == PackageManager.PERMISSION_GRANTED
+        )
+    }
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        hasAudioPermission = granted
+    }
+
     if (uiState.isLoading) {
         Box(
             modifier = modifier.fillMaxSize(),
-            contentAlignment = Alignment.CenterVertically as Alignment
+            contentAlignment = Alignment.Center
         ) {
             CircularProgressIndicator()
         }
@@ -132,10 +153,15 @@ fun PracticePronunciationScreen(
             }
             Text(
                 text = "${uiState.currentIndex + 1} / ${uiState.totalQuestions}",
-                style = MaterialTheme.typography.labelLarge,
+                style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
+
+        LinearProgressIndicator(
+            progress = { (uiState.currentIndex + 1).toFloat() / uiState.totalQuestions },
+            modifier = Modifier.fillMaxWidth(),
+        )
 
         // блок: слог
         Card(
@@ -174,7 +200,7 @@ fun PracticePronunciationScreen(
         // блок: график контура
         uiState.currentSyllable?.let { syllable ->
             PitchContourCard(
-                reference = ToneReference.getContour(syllable.toneNumber),
+                currentTone = syllable.toneNumber,
                 recorded = uiState.currentPitchPoints,
                 similarity = uiState.lastResult?.similarity
             )
@@ -243,7 +269,13 @@ fun PracticePronunciationScreen(
             // кнопка: запись
             RecordButton(
                 isRecording = uiState.isRecording,
-                onClick = { viewModel.onRecordClick() },
+                onClick = {
+                    if (hasAudioPermission) {
+                        viewModel.onRecordClick()
+                    } else {
+                        permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+                    }
+                },
                 modifier = Modifier.weight(1f)
             )
         }
@@ -311,7 +343,7 @@ private fun RecordButton(
 
 @Composable
 private fun PitchContourCard(
-    reference: FloatArray,
+    currentTone: Int,
     recorded: List<Float>,
     similarity: Float?,
     modifier: Modifier = Modifier
@@ -319,8 +351,8 @@ private fun PitchContourCard(
     val primary = MaterialTheme.colorScheme.primary
     val onSurfaceVariant = MaterialTheme.colorScheme.onSurfaceVariant
     val error = MaterialTheme.colorScheme.error
+    val surface = MaterialTheme.colorScheme.surface
 
-    // цвет записанного контура зависит от схожести
     val recordedColor = when {
         similarity == null -> primary
         similarity >= 0.6f -> Color(0xFF4CAF50)
@@ -343,24 +375,59 @@ private fun PitchContourCard(
             Canvas(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(160.dp)
+                    .aspectRatio(1.8f)
             ) {
                 val w = size.width
                 val h = size.height
-                val padding = 12.dp.toPx()
+                val padLeft = 16.dp.toPx()
+                val padRight = 36.dp.toPx() // место для подписей справа
+                val padTop = 12.dp.toPx()
+                val padBottom = 12.dp.toPx()
+                val drawW = w - padLeft - padRight
+                val drawH = h - padTop - padBottom
 
-                // эталонный контур (пунктир, серый)
-                if (reference.isNotEmpty()) {
-                    val refPath = Path()
-                    reference.forEachIndexed { i, value ->
-                        val x = padding + i.toFloat() / (reference.size - 1) * (w - 2 * padding)
-                        val y = h - padding - value * (h - 2 * padding)
-                        if (i == 0) refPath.moveTo(x, y) else refPath.lineTo(x, y)
+                val paint = android.graphics.Paint().apply {
+                    isAntiAlias = true
+                    textSize = 11.dp.toPx()
+                    typeface = android.graphics.Typeface.DEFAULT_BOLD
+                }
+
+                // все 4 эталонных контура
+                (1..4).forEach { tone ->
+                    val contour = ToneReference.getContour(tone)
+                    val isCurrentTone = tone == currentTone
+                    val contourAlpha = if (isCurrentTone) 0.85f else 0.22f
+                    val strokeWidth = if (isCurrentTone) 2.5.dp.toPx() else 1.2.dp.toPx()
+                    val contourColor = onSurfaceVariant.copy(alpha = contourAlpha)
+
+                    val path = Path()
+                    contour.forEachIndexed { i, value ->
+                        val x = padLeft + i.toFloat() / (contour.size - 1) * drawW
+                        val y = padTop + (1f - value) * drawH
+                        if (i == 0) path.moveTo(x, y) else path.lineTo(x, y)
                     }
-                    drawPath(
-                        path = refPath,
-                        color = onSurfaceVariant.copy(alpha = 0.4f),
-                        style = Stroke(width = 2.dp.toPx())
+                    drawPath(path = path, color = contourColor, style = Stroke(
+                        width = strokeWidth,
+                        cap = StrokeCap.Round,
+                        join = androidx.compose.ui.graphics.StrokeJoin.Round
+                    ))
+
+                    // подпись в конце линии справа
+                    val lastValue = contour.last()
+                    val labelX = padLeft + drawW + 4.dp.toPx()
+                    val labelY = padTop + (1f - lastValue) * drawH + paint.textSize / 3f
+
+                    paint.color = android.graphics.Color.argb(
+                        (contourAlpha * 255).toInt(),
+                        (onSurfaceVariant.red * 255).toInt(),
+                        (onSurfaceVariant.green * 255).toInt(),
+                        (onSurfaceVariant.blue * 255).toInt()
+                    )
+                    drawContext.canvas.nativeCanvas.drawText(
+                        tone.toString(),
+                        labelX,
+                        labelY,
+                        paint
                     )
                 }
 
@@ -370,42 +437,48 @@ private fun PitchContourCard(
                     val max = recorded.max()
                     val range = (max - min).takeIf { it > 0f } ?: 1f
 
-                    val userPath = Path()
-                    recorded.forEachIndexed { i, value ->
-                        val normalized = (value - min) / range
-                        val x = padding + i.toFloat() / (recorded.size - 1) * (w - 2 * padding)
-                        val y = h - padding - normalized * (h - 2 * padding)
-                        if (i == 0) userPath.moveTo(x, y) else userPath.lineTo(x, y)
+                    // сначала сглаживаем точки для отображения
+                    val smoothed = recorded.zipWithNext().runningFold(recorded.first()) { acc, (a, b) ->
+                        a * 0.3f + b * 0.7f
                     }
+
+                    val points = smoothed.mapIndexed { i, value ->
+                        val normalized = (value - min) / range
+                        Offset(
+                            x = padLeft + i.toFloat() / (smoothed.size - 1) * drawW,
+                            y = padTop + (1f - normalized) * drawH
+                        )
+                    }
+
+                    val userPath = Path()
+                    userPath.moveTo(points.first().x, points.first().y)
+
+                    for (i in 0 until points.size - 1) {
+                        val p0 = points[i]
+                        val p1 = points[i + 1]
+                        val cx = (p0.x + p1.x) / 2f
+                        userPath.cubicTo(cx, p0.y, cx, p1.y, p1.x, p1.y)
+                    }
+
                     drawPath(
                         path = userPath,
                         color = recordedColor,
-                        style = Stroke(width = 2.5.dp.toPx())
+                        style = Stroke(
+                            width = 2.5.dp.toPx(),
+                            cap = StrokeCap.Round,
+                            join = StrokeJoin.Round
+                        )
                     )
                 }
-
-                // оси
-                drawLine(
-                    color = onSurfaceVariant.copy(alpha = 0.2f),
-                    start = Offset(padding, padding),
-                    end = Offset(padding, h - padding),
-                    strokeWidth = 1.dp.toPx()
-                )
-                drawLine(
-                    color = onSurfaceVariant.copy(alpha = 0.2f),
-                    start = Offset(padding, h - padding),
-                    end = Offset(w - padding, h - padding),
-                    strokeWidth = 1.dp.toPx()
-                )
             }
 
-            // легенда
+            // легенда: только эталон + голос
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 LegendItem(
-                    color = onSurfaceVariant.copy(alpha = 0.4f),
+                    color = onSurfaceVariant.copy(alpha = 0.85f),
                     label = stringResource(R.string.practice_reference_contour)
                 )
                 LegendItem(
@@ -464,32 +537,32 @@ private fun PronunciationResultScreen(
             textAlign = TextAlign.Center
         )
 
-        // разбивка по тонам
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Text(
-                    text = stringResource(R.string.practice_tone_breakdown),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                (1..4).forEach { tone ->
-                    val toneResults = uiState.sessionResults.filter { it.syllable.toneNumber == tone }
-                    if (toneResults.isNotEmpty()) {
-                        val correct = toneResults.count { it.similarity >= 0.6f }
-                        Text(
-                            text = stringResource(R.string.practice_tone_score, tone, correct, toneResults.size),
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
-                }
-            }
-        }
+//        // разбивка по тонам
+//        Card(
+//            modifier = Modifier.fillMaxWidth(),
+//            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+//        ) {
+//            Column(
+//                modifier = Modifier.padding(16.dp),
+//                verticalArrangement = Arrangement.spacedBy(8.dp)
+//            ) {
+//                Text(
+//                    text = stringResource(R.string.practice_tone_breakdown),
+//                    style = MaterialTheme.typography.labelSmall,
+//                    color = MaterialTheme.colorScheme.onSurfaceVariant
+//                )
+//                (1..4).forEach { tone ->
+//                    val toneResults = uiState.sessionResults.filter { it.syllable.toneNumber == tone }
+//                    if (toneResults.isNotEmpty()) {
+//                        val correct = toneResults.count { it.similarity >= 0.6f }
+//                        Text(
+//                            text = stringResource(R.string.practice_tone_score, tone, correct, toneResults.size),
+//                            style = MaterialTheme.typography.bodyMedium
+//                        )
+//                    }
+//                }
+//            }
+//        }
 
         Spacer(Modifier.height(8.dp))
 

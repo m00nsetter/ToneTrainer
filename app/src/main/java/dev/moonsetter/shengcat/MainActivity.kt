@@ -28,8 +28,7 @@ class MainActivity : ComponentActivity() {
             val theme by settingsRepository.theme.collectAsState(initial = SettingsRepository.THEME_SYSTEM)
             val lang by settingsRepository.language.collectAsState(initial = SettingsRepository.LANG_EN)
 
-            // применяем локаль
-            val locale = Locale(lang)
+            val locale = Locale.forLanguageTag(lang)
             Locale.setDefault(locale)
             val config = resources.configuration
             config.setLocale(locale)

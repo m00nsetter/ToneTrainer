@@ -51,7 +51,7 @@ class PronunciationViewModel @Inject constructor(
     private val toneAnalyzer: ToneAnalyzer,
     private val repository: PracticeRepository,
     private val syllableRepository: SyllableRepository,
-    @ApplicationContext private val context: Context
+    @param:ApplicationContext private val context: Context
 ) : ViewModel() {
 
     var uiState by mutableStateOf(PronunciationUiState())
@@ -70,7 +70,7 @@ class PronunciationViewModel @Inject constructor(
                 uiState = uiState.copy(isLoading = true)
                 val pool = syllableRepository.getPool()
                 uiState = PronunciationUiState(
-                    syllables = pool.shuffled().take(10),
+                    syllables = pool.shuffled(java.util.Random()).take(10),
                     isLoading = false
                 )
             } catch (e: Exception) {

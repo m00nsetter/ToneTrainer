@@ -14,8 +14,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import dev.moonsetter.shengcat.R
+import dev.moonsetter.shengcat.model.pinyinWithTone
 
 @Composable
 fun PracticeRecognitionScreen(
@@ -117,10 +119,15 @@ fun PracticeRecognitionScreen(
             }
             Text(
                 text = "${uiState.currentIndex + 1} / ${uiState.totalQuestions}",
-                style = MaterialTheme.typography.labelLarge,
+                style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
+
+        LinearProgressIndicator(
+            progress = { (uiState.currentIndex + 1).toFloat() / uiState.totalQuestions },
+            modifier = Modifier.fillMaxWidth(),
+        )
 
         // блок: слог + кнопка озвучить
         Card(
@@ -182,10 +189,7 @@ fun PracticeRecognitionScreen(
                     )
                     if (!result.isCorrect) {
                         Text(
-                            text = stringResource(
-                                R.string.practice_correct_tone,
-                                result.syllable.toneNumber
-                            ),
+                            text = stringResource(R.string.practice_correct_tone, result.syllable.pinyin),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onErrorContainer
                         )
@@ -207,12 +211,14 @@ fun PracticeRecognitionScreen(
                 // цвет кнопки после ответа
                 val containerColor = when {
                     hasAnswered && isCorrectTone -> MaterialTheme.colorScheme.primaryContainer
-                    hasAnswered && isSelected -> MaterialTheme.colorScheme.errorContainer
+                    hasAnswered && isSelected && !isCorrectTone -> MaterialTheme.colorScheme.errorContainer
+                    hasAnswered -> MaterialTheme.colorScheme.surfaceVariant // остальные кнопки после ответа
                     else -> MaterialTheme.colorScheme.surfaceVariant
                 }
                 val contentColor = when {
                     hasAnswered && isCorrectTone -> MaterialTheme.colorScheme.onPrimaryContainer
-                    hasAnswered && isSelected -> MaterialTheme.colorScheme.onErrorContainer
+                    hasAnswered && isSelected && !isCorrectTone -> MaterialTheme.colorScheme.onErrorContainer
+                    hasAnswered -> MaterialTheme.colorScheme.onSurfaceVariant
                     else -> MaterialTheme.colorScheme.onSurfaceVariant
                 }
 
@@ -227,7 +233,7 @@ fun PracticeRecognitionScreen(
                         disabledContentColor = contentColor
                     )
                 ) {
-                    Text(stringResource(R.string.tone_number, tone))
+                    Text(uiState.currentSyllable?.pinyinWithTone(tone) ?: stringResource(R.string.tone_number, tone))
                 }
             }
         }
@@ -276,37 +282,37 @@ private fun RecognitionResultScreen(
             textAlign = TextAlign.Center
         )
 
-        // разбивка по тонам
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Text(
-                    text = stringResource(R.string.practice_tone_breakdown),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                (1..4).forEach { tone ->
-                    val toneResults = uiState.sessionResults.filter { it.syllable.toneNumber == tone }
-                    if (toneResults.isNotEmpty()) {
-                        val correct = toneResults.count { it.isCorrect }
-                        Text(
-                            text = stringResource(
-                                R.string.practice_tone_score,
-                                tone,
-                                correct,
-                                toneResults.size
-                            ),
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
-                }
-            }
-        }
+//        // разбивка по тонам
+//        Card(
+//            modifier = Modifier.fillMaxWidth(),
+//            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+//        ) {
+//            Column(
+//                modifier = Modifier.padding(16.dp),
+//                verticalArrangement = Arrangement.spacedBy(8.dp)
+//            ) {
+//                Text(
+//                    text = stringResource(R.string.practice_tone_breakdown),
+//                    style = MaterialTheme.typography.labelSmall,
+//                    color = MaterialTheme.colorScheme.onSurfaceVariant
+//                )
+//                (1..4).forEach { tone ->
+//                    val toneResults = uiState.sessionResults.filter { it.syllable.toneNumber == tone }
+//                    if (toneResults.isNotEmpty()) {
+//                        val correct = toneResults.count { it.isCorrect }
+//                        Text(
+//                            text = stringResource(
+//                                R.string.practice_tone_score,
+//                                tone,
+//                                correct,
+//                                toneResults.size
+//                            ),
+//                            style = MaterialTheme.typography.bodyMedium
+//                        )
+//                    }
+//                }
+//            }
+//        }
 
         Spacer(Modifier.height(8.dp))
 

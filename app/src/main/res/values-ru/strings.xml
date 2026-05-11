@@ -55,7 +55,7 @@
     <string name="practice_result_incorrect">Неверно</string>
     <string name="practice_similarity">Схожесть: %d%%</string>
 
-    <string name="practice_correct_tone">Правильный ответ: Тон %d</string>
+    <string name="practice_correct_tone">Правильный ответ: %s</string>
 
     <!-- практика: результаты сессии -->
     <string name="practice_exit_title">Завершить практику?</string>
