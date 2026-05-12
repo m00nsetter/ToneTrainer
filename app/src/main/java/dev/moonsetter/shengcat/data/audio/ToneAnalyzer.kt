@@ -10,22 +10,26 @@ class ToneAnalyzer @Inject constructor() {
     // Added a noise floor to prevent normalization from being ruined by silence
     private fun normalize(points: List<Float>): FloatArray {
         val noiseFloor = 60f
-        val filteredPoints = points.map { if (it < noiseFloor) 0f else it }
+        val validPoints = points.filter { it > noiseFloor }
 
-        val validPoints = filteredPoints.filter { it > 0f }
-        if (validPoints.isEmpty()) return FloatArray(points.size) { 0.5f }
+        if (validPoints.isEmpty()) return FloatArray(points.size) { 0f }
 
         val min = validPoints.min()
         val max = validPoints.max()
+        val avg = validPoints.average().toFloat()
         val range = max - min
 
-        return if (range < 1f) {
-            FloatArray(points.size) { 0.5f }
-        } else {
-            FloatArray(points.size) { i ->
-                if (points[i] < noiseFloor) 0.5f
-                else ((points[i] - min) / range).coerceIn(0f, 1f)
-            }
+        // If the pitch is flat (range < 10Hz), don't squash it to 0.5.
+        // Determine if it's high or low.
+        if (range < 10f) {
+            // Assume > 200Hz is High (Tone 1) for most voices, < 200Hz is Low
+            val flatValue = if (avg > 200f) 0.9f else 0.3f
+            return FloatArray(points.size) { flatValue }
+        }
+
+        return FloatArray(points.size) { i ->
+            if (points[i] < noiseFloor) 0f
+            else ((points[i] - min) / range).coerceIn(0f, 1f)
         }
     }
 
@@ -70,35 +74,23 @@ class ToneAnalyzer @Inject constructor() {
     }
 
     fun compare(recordedPitch: List<Float>, toneNumber: Int): Float {
-        // Step 1: Remove silence and check if we have enough "voice"
+        // Only filter for actual voice
         val voicedContent = recordedPitch.filter { it > 60f }
-        if (voicedContent.size < 5) return 0f
 
-        // Step 2: Duration Check (Each frame is ~46ms with 2048 frameSize)
-        // Natural syllables are roughly 4 to 15 frames long.
-        val frameCount = voicedContent.size
-        val durationPenalty = when {
-            frameCount > 20 -> 0.6f // Way too long (the "chuaaaaaan" issue)
-            frameCount < 4 -> 0.8f  // Too short/staccato
-            else -> 1.0f            // Perfect natural length
-        }
+        // If you are speaking very clearly/fast, 5 points might be too high
+        // for a small frameSize. Try lowering this to 3 if Tone 1 still fails.
+        if (voicedContent.size < 4) return 0f
 
         val reference = ToneReference.getContour(toneNumber)
         val smoothed = smooth(voicedContent)
         val normalized = normalize(smoothed)
 
-        // Step 3: Resample for DTW comparison
         val resampled = resample(normalized, 20)
         val referenceResampled = resample(reference, 20)
 
         val distance = dtw(resampled, referenceResampled)
 
-        // Step 4: Final Score calculation with penalty
-        val shapeSimilarity = (1f - (distance * 2f)).coerceIn(0f, 1f)
-        return (shapeSimilarity * durationPenalty).coerceIn(0f, 1f)
-    }
-
-    private fun trimLeadingSilence(points: List<Float>): List<Float> {
-        return points.dropWhile { it < 60f } // Drop everything below the noise floor
+        // Similarity calculation
+        return (1f - (distance * 2f)).coerceIn(0f, 1f)
     }
 }

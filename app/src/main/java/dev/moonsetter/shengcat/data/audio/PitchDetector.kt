@@ -32,7 +32,7 @@ class PitchDetector @Inject constructor() {
         PitchDetectionHandler { result, _ ->
             // Only accept pitch if it has a reasonable probability of being a voice
             // result.probability > 0.8f is usually a good threshold for clean audio
-            lastPitch = if (result.pitch > 0f && result.probability > 0.85f) {
+            lastPitch = if (result.pitch > 0f && result.probability > 0.75f) {
                 result.pitch
             } else {
                 null

@@ -103,8 +103,9 @@ class PronunciationViewModel @Inject constructor(
         recordingJob = viewModelScope.launch {
             recorder.record().collect { frame ->
                 val pitch = pitchDetector.process(frame)
+                // Log this to see if Tone 1 is actually producing points
+                // Log.d("Pitch", "Detected: $pitch")
                 if (pitch != null && pitch > 60f) {
-                    // ONLY add the point if it's a valid voice frequency
                     uiState = uiState.copy(
                         currentPitchPoints = uiState.currentPitchPoints + pitch
                     )
