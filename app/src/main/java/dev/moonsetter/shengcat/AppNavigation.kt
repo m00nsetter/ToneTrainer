@@ -26,7 +26,6 @@ import dev.moonsetter.shengcat.screens.translator.*
 
 sealed class Screen(val route: String) {
     object Main : Screen("main_screen")
-//    object Phrasebook : Screen("phrasebook_screen")
     object Translator : Screen("translator_screen")
     object TranslatorHistory : Screen("translator_history_screen")
     object Practice : Screen("practice_screen")
@@ -49,7 +48,6 @@ fun AppNavigation() {
 
     val navItems = listOf(
         NavItem(Screen.Main.route, Icons.Outlined.Home, R.string.main_screen_name),
-//        NavItem(Screen.Phrasebook.route, Icons.Outlined.ChatBubbleOutline, R.string.phrasebook_screen_name),
         NavItem(Screen.Translator.route, Icons.Outlined.Translate, R.string.translator_screen_name),
         NavItem(Screen.Practice.route, Icons.Outlined.MusicNote, R.string.practice_screen_name),
         NavItem(Screen.Settings.route, Icons.Outlined.Settings, R.string.settings_screen_name)
@@ -91,7 +89,6 @@ fun AppNavigation() {
         NavHost(navController = navController, startDestination = Screen.Main.route, modifier = Modifier.padding(paddingValues))
         {
             composable(route = Screen.Main.route){ MainScreen() }
-//            composable(route = Screen.Phrasebook.route){ PhrasebookScreen() }
             composable(route = Screen.Translator.route){ 
                 TranslatorScreen(
                     onNavigateToHistory = { navController.navigate(Screen.TranslatorHistory.route) }

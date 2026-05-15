@@ -26,7 +26,7 @@ fun SettingsScreen(
 ) {
     val uiState = viewModel.uiState
 
-    // диалог: сброс данных
+    // сброс данных
     if (uiState.showResetDialog) {
         AlertDialog(
             onDismissRequest = { viewModel.onResetDismiss() },
@@ -52,14 +52,12 @@ fun SettingsScreen(
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // заголовок
         Text(
             text = stringResource(R.string.settings_screen_name),
             style = MaterialTheme.typography.headlineMedium,
             modifier = Modifier.padding(top = 16.dp)
         )
 
-        // блок: язык интерфейса
         SettingsCard(title = stringResource(R.string.settings_language)) {
             SettingsSegmentedButtons(
                 options = listOf(
@@ -71,7 +69,6 @@ fun SettingsScreen(
             )
         }
 
-        // блок: тема оформления
         SettingsCard(title = stringResource(R.string.settings_theme)) {
             SettingsSegmentedButtons(
                 options = listOf(
@@ -84,7 +81,6 @@ fun SettingsScreen(
             )
         }
 
-        // блок: сброс данных
         SettingsCard(title = stringResource(R.string.settings_data)) {
             OutlinedButton(
                 onClick = { viewModel.onResetClick() },

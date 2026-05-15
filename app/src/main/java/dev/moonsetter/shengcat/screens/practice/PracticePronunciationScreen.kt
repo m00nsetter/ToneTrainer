@@ -44,7 +44,6 @@ fun PracticePronunciationScreen(
 ) {
     val uiState = viewModel.uiState
     var showExitDialog by remember { mutableStateOf(false) }
-    var showRepeatDialog by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
     var hasAudioPermission by remember {
@@ -74,7 +73,7 @@ fun PracticePronunciationScreen(
         showExitDialog = true
     }
 
-    // диалог: выйти из практики
+    // выход
     if (showExitDialog) {
         AlertDialog(
             onDismissRequest = { showExitDialog = false },
@@ -96,34 +95,10 @@ fun PracticePronunciationScreen(
         )
     }
 
-    // диалог: повторить сессию
-    if (showRepeatDialog) {
-        AlertDialog(
-            onDismissRequest = { showRepeatDialog = false },
-            title = { Text(stringResource(R.string.practice_repeat_title)) },
-            confirmButton = {
-                TextButton(onClick = {
-                    showRepeatDialog = false
-                    viewModel.onRepeatSession()
-                }) {
-                    Text(stringResource(R.string.confirm))
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = {
-                    showRepeatDialog = false
-                    onNavigateBack()
-                }) {
-                    Text(stringResource(R.string.cancel))
-                }
-            }
-        )
-    }
-
     if (uiState.isFinished) {
         PronunciationResultScreen(
             uiState = uiState,
-            onRepeat = { showRepeatDialog = true },
+            onRepeat = { viewModel.onRepeatSession() },
             onFinish = onNavigateBack
         )
         return
@@ -136,7 +111,7 @@ fun PracticePronunciationScreen(
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // шапка: назад + прогресс
+        // шапка
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -163,7 +138,7 @@ fun PracticePronunciationScreen(
             modifier = Modifier.fillMaxWidth(),
         )
 
-        // блок: слог
+        // слог
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
@@ -197,7 +172,7 @@ fun PracticePronunciationScreen(
             }
         }
 
-        // блок: график контура
+        // график контура
         uiState.currentSyllable?.let { syllable ->
             PitchContourCard(
                 currentTone = syllable.toneNumber,
@@ -206,7 +181,7 @@ fun PracticePronunciationScreen(
             )
         }
 
-        // блок: результат
+        // результат
         uiState.lastResult?.let { result ->
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -235,52 +210,47 @@ fun PracticePronunciationScreen(
                         else
                             MaterialTheme.colorScheme.onErrorContainer
                     )
-                    Text(
-                        text = stringResource(R.string.practice_similarity, (result.similarity * 100).toInt()),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = if (result.similarity >= 0.6f)
-                            MaterialTheme.colorScheme.onPrimaryContainer
-                        else
-                            MaterialTheme.colorScheme.onErrorContainer
-                    )
                 }
             }
         }
 
-        // ряд кнопок: озвучить + запись
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // кнопка: прослушать эталон
+            // TTS
             OutlinedButton(
                 onClick = { viewModel.onPlayReferenceClick() },
                 modifier = Modifier.weight(1f),
-                enabled = !uiState.isRecording
+                enabled = !uiState.isRecording && uiState.lastResult == null
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Outlined.VolumeUp,
-                    contentDescription = stringResource(R.string.tts)
+                    contentDescription = null
                 )
                 Spacer(Modifier.width(4.dp))
                 Text(stringResource(R.string.practice_listen))
             }
 
-            // кнопка: запись
+            // запись
             RecordButton(
                 isRecording = uiState.isRecording,
                 onClick = {
-                    if (hasAudioPermission) {
-                        viewModel.onRecordClick()
-                    } else {
-                        permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+                    if (uiState.lastResult == null) {
+                        if (hasAudioPermission) {
+                            viewModel.onRecordClick()
+                        } else {
+                            permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+                        }
                     }
                 },
-                modifier = Modifier.weight(1f)
+                modifier = Modifier
+                    .weight(1f)
+                    .graphicsLayer(alpha = if (uiState.lastResult == null) 1f else 0.5f)
             )
         }
 
-        // кнопка: далее (только после результата)
+        // кнопка далее
         if (uiState.lastResult != null) {
             Button(
                 onClick = { viewModel.onNextClick() },
@@ -305,7 +275,7 @@ private fun RecordButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val infiniteTransition = rememberInfiniteTransition(label = "запись")
+    val infiniteTransition = rememberInfiniteTransition(label = "Record")
     val alpha by infiniteTransition.animateFloat(
         initialValue = 1f,
         targetValue = 0.3f,
@@ -313,7 +283,7 @@ private fun RecordButton(
             animation = tween(600, easing = LinearEasing),
             repeatMode = RepeatMode.Reverse
         ),
-        label = "мигание"
+        label = "Record"
     )
 
     Button(
@@ -351,7 +321,6 @@ private fun PitchContourCard(
     val primary = MaterialTheme.colorScheme.primary
     val onSurfaceVariant = MaterialTheme.colorScheme.onSurfaceVariant
     val error = MaterialTheme.colorScheme.error
-    val surface = MaterialTheme.colorScheme.surface
 
     val recordedColor = when {
         similarity == null -> primary
@@ -392,7 +361,7 @@ private fun PitchContourCard(
                     typeface = android.graphics.Typeface.DEFAULT_BOLD
                 }
 
-                // все 4 эталонных контура
+                // график тонов
                 (1..4).forEach { tone ->
                     val contour = ToneReference.getContour(tone)
                     val isCurrentTone = tone == currentTone
@@ -448,7 +417,7 @@ private fun PitchContourCard(
                     val max = recorded.max()
                     val range = (max - min).takeIf { it > 0f } ?: 1f
 
-                    // сначала сглаживаем точки для отображения
+                    // сглаживание точек
                     val windowSize = 5
                     val smoothed = List(recorded.size) { i ->
                         val from = maxOf(0, i - windowSize / 2)

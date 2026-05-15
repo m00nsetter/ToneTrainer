@@ -27,7 +27,6 @@ fun PracticeHistoryScreen(
     val uiState = viewModel.uiState
     var showClearDialog by remember { mutableStateOf(false) }
 
-    // диалог: очистить историю
     if (showClearDialog) {
         AlertDialog(
             onDismissRequest = { showClearDialog = false },
@@ -53,7 +52,6 @@ fun PracticeHistoryScreen(
             .fillMaxSize()
             .padding(16.dp, 0.dp)
     ) {
-        // шапка: назад + заголовок + очистить
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -81,7 +79,6 @@ fun PracticeHistoryScreen(
         }
 
         if (uiState.results.isEmpty()) {
-            // пустое состояние
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center

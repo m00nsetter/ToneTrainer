@@ -36,10 +36,6 @@ class MicrophoneRecorder @Inject constructor(
             bufferSize
         )
 
-        check(audioRecord.state == AudioRecord.STATE_INITIALIZED) {
-            "AudioRecord failed to initialize"
-        }
-
         audioRecord.startRecording()
 
         try {

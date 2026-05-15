@@ -6,7 +6,6 @@ data class SyllableItem(
     val toneNumber: Int
 )
 
-// возвращает пиньинь с заменённым тоном для кнопок выбора
 fun SyllableItem.pinyinWithTone(targetTone: Int): String {
     val vowelGroups = listOf(
         listOf('ā', 'á', 'ǎ', 'à', 'a'),
@@ -17,11 +16,9 @@ fun SyllableItem.pinyinWithTone(targetTone: Int): String {
     )
     val index = targetTone - 1
 
-    // находим символ с тоновым знаком в оригинальном пиньинь
     for (group in vowelGroups) {
         for (char in pinyin) {
             if (char in group) {
-                // нашли тонированный гласный — заменяем только его
                 return pinyin.replace(char, group[index])
             }
         }

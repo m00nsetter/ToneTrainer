@@ -8,7 +8,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.stringResource
@@ -24,7 +23,6 @@ fun MainScreen(modifier: Modifier = Modifier) {
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // заголовок
         Column(
             modifier = Modifier.padding(top = 16.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -71,7 +69,6 @@ fun MainScreen(modifier: Modifier = Modifier) {
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Spacer(Modifier.height(12.dp))
-            // визуализация четырёх тонов
             ToneShapesRow()
         }
 
@@ -148,7 +145,6 @@ private fun ToneShapesRow() {
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        // четыре карточки тонов
         listOf(
             Triple("ā", stringResource(R.string.main_tone1_name), 1),
             Triple("á", stringResource(R.string.main_tone2_name), 2),
@@ -171,7 +167,6 @@ private fun ToneShapesRow() {
                         style = MaterialTheme.typography.titleLarge,
                         color = primary
                     )
-                    // контур тона
                     Canvas(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -183,17 +178,14 @@ private fun ToneShapesRow() {
                         val path = Path()
 
                         when (toneNumber) {
-                            // тон 1: ровный высокий
                             1 -> {
                                 path.moveTo(pad, pad)
                                 path.lineTo(w - pad, pad)
                             }
-                            // тон 2: восходящий
                             2 -> {
                                 path.moveTo(pad, h - pad)
                                 path.lineTo(w - pad, pad)
                             }
-                            // тон 3: нисходяще-восходящий
                             3 -> {
                                 path.moveTo(pad, h * 0.3f)
                                 path.cubicTo(
@@ -202,7 +194,6 @@ private fun ToneShapesRow() {
                                     w - pad, h * 0.4f
                                 )
                             }
-                            // тон 4: резко нисходящий
                             4 -> {
                                 path.moveTo(pad, pad)
                                 path.lineTo(w - pad, h - pad)

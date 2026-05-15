@@ -63,7 +63,6 @@ class RecognitionViewModel @Inject constructor(
                     syllables = pool.shuffled(java.util.Random()).take(10),
                     isLoading = false
                 )
-                // автоматически озвучиваем первый слог
                 playCurrentSyllable()
             } catch (e: Exception) {
                 uiState = uiState.copy(error = e.message, isLoading = false)

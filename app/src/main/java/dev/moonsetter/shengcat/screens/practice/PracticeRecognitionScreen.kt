@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.graphics.StrokeCap
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import dev.moonsetter.shengcat.R
 import dev.moonsetter.shengcat.model.pinyinWithTone
@@ -27,13 +26,12 @@ fun PracticeRecognitionScreen(
 ) {
     val uiState = viewModel.uiState
     var showExitDialog by remember { mutableStateOf(false) }
-    var showRepeatDialog by remember { mutableStateOf(false) }
 
     BackHandler(enabled = !uiState.isFinished) {
         showExitDialog = true
     }
 
-    // диалог: выйти из практики
+    // выход
     if (showExitDialog) {
         AlertDialog(
             onDismissRequest = { showExitDialog = false },
@@ -55,30 +53,6 @@ fun PracticeRecognitionScreen(
         )
     }
 
-    // диалог: повторить сессию
-    if (showRepeatDialog) {
-        AlertDialog(
-            onDismissRequest = { showRepeatDialog = false },
-            title = { Text(stringResource(R.string.practice_repeat_title)) },
-            confirmButton = {
-                TextButton(onClick = {
-                    showRepeatDialog = false
-                    viewModel.onRepeatSession()
-                }) {
-                    Text(stringResource(R.string.confirm))
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = {
-                    showRepeatDialog = false
-                    onNavigateBack()
-                }) {
-                    Text(stringResource(R.string.cancel))
-                }
-            }
-        )
-    }
-
     if (uiState.isLoading) {
         Box(
             modifier = modifier.fillMaxSize(),
@@ -92,7 +66,7 @@ fun PracticeRecognitionScreen(
     if (uiState.isFinished) {
         RecognitionResultScreen(
             uiState = uiState,
-            onRepeat = { showRepeatDialog = true },
+            onRepeat = { viewModel.onRepeatSession() },
             onFinish = onNavigateBack
         )
         return
@@ -105,7 +79,7 @@ fun PracticeRecognitionScreen(
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // шапка: назад + прогресс
+        // шапка
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -129,7 +103,7 @@ fun PracticeRecognitionScreen(
             modifier = Modifier.fillMaxWidth(),
         )
 
-        // блок: слог + кнопка озвучить
+        // кнопки
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
@@ -146,7 +120,7 @@ fun PracticeRecognitionScreen(
                     style = MaterialTheme.typography.displayLarge,
                     textAlign = TextAlign.Center
                 )
-                // кнопка: прослушать
+                // TTS
                 OutlinedButton(onClick = { viewModel.onPlayClick() }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Outlined.VolumeUp,
@@ -158,7 +132,7 @@ fun PracticeRecognitionScreen(
             }
         }
 
-        // блок: результат
+        // результаты
         uiState.lastResult?.let { result ->
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -198,7 +172,7 @@ fun PracticeRecognitionScreen(
             }
         }
 
-        // блок: кнопки выбора тона
+        // кнопки выбора тона
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(10.dp)
@@ -238,7 +212,6 @@ fun PracticeRecognitionScreen(
             }
         }
 
-        // кнопка: далее (только после ответа)
         if (uiState.lastResult != null) {
             Button(
                 onClick = { viewModel.onNextClick() },
@@ -281,38 +254,6 @@ private fun RecognitionResultScreen(
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center
         )
-
-//        // разбивка по тонам
-//        Card(
-//            modifier = Modifier.fillMaxWidth(),
-//            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
-//        ) {
-//            Column(
-//                modifier = Modifier.padding(16.dp),
-//                verticalArrangement = Arrangement.spacedBy(8.dp)
-//            ) {
-//                Text(
-//                    text = stringResource(R.string.practice_tone_breakdown),
-//                    style = MaterialTheme.typography.labelSmall,
-//                    color = MaterialTheme.colorScheme.onSurfaceVariant
-//                )
-//                (1..4).forEach { tone ->
-//                    val toneResults = uiState.sessionResults.filter { it.syllable.toneNumber == tone }
-//                    if (toneResults.isNotEmpty()) {
-//                        val correct = toneResults.count { it.isCorrect }
-//                        Text(
-//                            text = stringResource(
-//                                R.string.practice_tone_score,
-//                                tone,
-//                                correct,
-//                                toneResults.size
-//                            ),
-//                            style = MaterialTheme.typography.bodyMedium
-//                        )
-//                    }
-//                }
-//            }
-//        }
 
         Spacer(Modifier.height(8.dp))
 

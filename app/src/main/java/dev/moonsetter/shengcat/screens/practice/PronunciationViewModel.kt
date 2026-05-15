@@ -103,9 +103,7 @@ class PronunciationViewModel @Inject constructor(
         recordingJob = viewModelScope.launch {
             recorder.record().collect { frame ->
                 val pitch = pitchDetector.process(frame)
-                // Log this to see if Tone 1 is actually producing points
-                // Log.d("Pitch", "Detected: $pitch")
-                if (pitch != null && pitch > 60f) {
+                if (pitch != null) {
                     uiState = uiState.copy(
                         currentPitchPoints = uiState.currentPitchPoints + pitch
                     )
@@ -115,11 +113,18 @@ class PronunciationViewModel @Inject constructor(
     }
 
     fun stopRecording() {
+        autoStopJob?.cancel()
+        autoStopJob = null
         recordingJob?.cancel()
-        val syllable = uiState.currentSyllable ?: return
-        val recorded = uiState.currentPitchPoints
 
-        // Validation: Check if we actually caught enough audio data
+        val syllable = uiState.currentSyllable ?: return
+
+        if (uiState.lastResult != null) {
+            uiState = uiState.copy(isRecording = false)
+            return
+        }
+
+        val recorded = uiState.currentPitchPoints
         if (recorded.size < 5) {
             uiState = uiState.copy(isRecording = false, error = "Recording too short")
             return
@@ -132,11 +137,12 @@ class PronunciationViewModel @Inject constructor(
             similarity = similarity,
             recordedPitch = recorded
         )
+
         uiState = uiState.copy(
             isRecording = false,
             lastResult = result,
             sessionResults = uiState.sessionResults + result,
-            error = null // Clear any previous length errors
+            error = null
         )
     }
 

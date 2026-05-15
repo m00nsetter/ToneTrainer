@@ -28,26 +28,20 @@ class PitchDetector @Inject constructor() {
     private val pitchProcessor = PitchProcessor(
         PitchEstimationAlgorithm.YIN,
         sampleRate.toFloat(),
-        frameSize,
-        PitchDetectionHandler { result, _ ->
-            // Only accept pitch if it has a reasonable probability of being a voice
-            // result.probability > 0.8f is usually a good threshold for clean audio
-            lastPitch = if (result.pitch > 0f && result.probability > 0.75f) {
-                result.pitch
-            } else {
-                null
-            }
+        frameSize
+    ) { result, _ ->
+        lastPitch = if (result.pitch > 0f && result.probability > 0.75f) {
+            result.pitch
+        } else {
+            null
         }
-    )
+    }
 
     fun process(frame: FloatArray): Float? {
         val audioEvent = AudioEvent(format)
         audioEvent.floatBuffer = frame
-        // Reset lastPitch before processing to ensure we aren't getting old data
         lastPitch = null
         pitchProcessor.process(audioEvent)
-
-        // Filter results to human speech range (60Hz - 1000Hz)
         return lastPitch?.takeIf { it in minFrequency..maxFrequency }
     }
 }

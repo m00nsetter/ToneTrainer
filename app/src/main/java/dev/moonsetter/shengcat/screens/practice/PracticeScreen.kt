@@ -12,7 +12,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import dev.moonsetter.shengcat.R
 
 @Composable
@@ -29,7 +28,6 @@ fun PracticeScreen(
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // заголовок
         Text(
             text = stringResource(R.string.practice_screen_name),
             style = MaterialTheme.typography.headlineMedium,
@@ -42,7 +40,7 @@ fun PracticeScreen(
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
-        // блок: режим 2 — произношение
+        // режим произношение
         PracticeModeCard(
             title = stringResource(R.string.practice_pronunciation_screen_name),
             description = stringResource(R.string.practice_pronunciation_description),
@@ -51,7 +49,7 @@ fun PracticeScreen(
             onClick = onNavigateToPronunciation
         )
 
-        // блок: режим 1 — распознавание
+        // режим распознавание
         PracticeModeCard(
             title = stringResource(R.string.practice_recognition_screen_name),
             description = stringResource(R.string.practice_recognition_description),
@@ -60,7 +58,7 @@ fun PracticeScreen(
             onClick = onNavigateToRecognition
         )
 
-        // кнопка: история
+        // история
         OutlinedButton(
             onClick = onNavigateToHistory,
             modifier = Modifier.fillMaxWidth()

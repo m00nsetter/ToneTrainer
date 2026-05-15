@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
                 else -> isSystemInDarkTheme()
             }
 
-            ShengCatTheme(darkTheme = darkTheme, dynamicColor = false) {
+            ShengCatTheme(darkTheme = darkTheme, dynamicColor = true) {
                 AppNavigation()
             }
         }

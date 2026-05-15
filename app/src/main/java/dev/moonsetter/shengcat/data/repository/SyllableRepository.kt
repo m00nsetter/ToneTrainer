@@ -44,17 +44,15 @@ class SyllableRepository @Inject constructor(
 
             val char = character[0]
 
-            // pinyin4j возвращает null если символ не распознан
             val readings = PinyinHelper.toHanyuPinyinStringArray(char, format)
             if (readings.isNullOrEmpty()) continue
 
-            // пропускаем полифоны — несколько разных чтений
             val uniqueReadings = readings.toSet()
             if (uniqueReadings.size > 1) continue
 
             val pinyin = fixToneMarks(uniqueReadings.first())
             val toneNumber = extractTone(pinyin)
-            if (toneNumber == 0) continue // нейтральный тон — пропускаем
+            if (toneNumber == 0) continue
 
             pool.add(SyllableItem(character, pinyin, toneNumber))
         }
@@ -63,7 +61,6 @@ class SyllableRepository @Inject constructor(
         pool
     }
 
-    // извлекает номер тона из пиньинь с диакритикой (ā=1, á=2, ǎ=3, à=4)
     private fun extractTone(pinyin: String): Int {
         for (char in pinyin) {
             when (char) {
@@ -76,7 +73,6 @@ class SyllableRepository @Inject constructor(
         return 0
     }
 
-    // те же фиксы что и в PinyinConverter
     private fun fixToneMarks(text: String): String {
         return text
             .replace('ă', 'ǎ')

@@ -36,7 +36,7 @@
     <string name="clear_translator_history">Очистить историю переводчика?</string>
 
     <!-- практика: экран выбора -->
-    <string name="practice_screen_subtitle">Выберите режим практики для тренировки тонов китайского языка</string>
+    <string name="practice_screen_subtitle">Выберите режим практики</string>
     <string name="practice_pronunciation_description">Прочитайте слог вслух и посмотрите, насколько ваш тон соответствует эталонному контуру</string>
     <string name="practice_recognition_description">Слушайте озвученные слоги и определяйте, какой тон вы слышите</string>
 
@@ -60,18 +60,15 @@
     <!-- практика: результаты сессии -->
     <string name="practice_exit_title">Завершить практику?</string>
     <string name="practice_exit_message">Ваш прогресс не будет сохранён</string>
-    <string name="practice_repeat_title">Повторить эту сессию?</string>
-    <string name="practice_session_done">Сессия завершена!</string>
+    <string name="practice_session_done">Практика завершена!</string>
     <string name="practice_session_score">Результат: %1$d / %2$d</string>
-    <string name="practice_tone_breakdown">Разбивка по тонам</string>
-    <string name="practice_tone_score">Тон %1$d: %2$d / %3$d</string>
 
     <!-- практика: история -->
     <string name="clear_practice_history">Очистить историю практики?</string>
     <string name="no_practice_history">История практики пуста</string>
 
     <string name="settings_language">Язык интерфейса</string>
-    <string name="settings_theme">Тема оформления</string>
+    <string name="settings_theme">Тема</string>
     <string name="settings_theme_system">Системная</string>
     <string name="settings_theme_light">Светлая</string>
     <string name="settings_theme_dark">Тёмная</string>
@@ -82,16 +79,16 @@
 
     <string name="main_subtitle">Тренажёр тонов китайского языка</string>
     <string name="main_how_to_use_title">Как пользоваться</string>
-    <string name="main_how_to_use_step1">Откройте вкладку «Тоны», чтобы начать сессию практики</string>
+    <string name="main_how_to_use_step1">Откройте вкладку «Тоны», чтобы начать практиковаться</string>
     <string name="main_how_to_use_step2">В режиме произношения читайте слог вслух и сравнивайте свой тон с эталонным контуром</string>
     <string name="main_how_to_use_step3">В режиме распознавания слушайте слог и выбирайте правильный тон</string>
     <string name="main_how_to_use_step4">Используйте переводчик для поиска слов и прослушивания их произношения</string>
     <string name="main_tones_title">Тоны китайского языка</string>
-    <string name="main_tones_description">В мандаринском китайском языке четыре тона. Один и тот же слог, произнесённый с разным тоном, имеет совершенно разное значение. Например: mā (мать), má (конопля), mǎ (лошадь), mà (ругать).</string>
-    <string name="main_tone1_name">Ровный</string>
+    <string name="main_tones_description">В китайском языке четыре тона. Один и тот же слог, произнесённый с разным тоном, имеет совершенно разное значение. Например: mā, má, mǎ, mà.</string>
+    <string name="main_tone1_name">Высокий ровный</string>
     <string name="main_tone2_name">Восходящий</string>
-    <string name="main_tone3_name">Изгибающийся</string>
+    <string name="main_tone3_name">Нисходяще-восходящий</string>
     <string name="main_tone4_name">Нисходящий</string>
     <string name="main_about_title">О приложении</string>
-    <string name="main_about_description">ShengCat помогает освоить тоны мандаринского китайского через практику слушания и произношения. Тренируйте слух в режиме распознавания и голос в режиме произношения — оба режима используют анализ звука в реальном времени.</string>
+    <string name="main_about_description">Данное приложение помогает освоить тоны китайского языка через практику слушания и произношения. Тренируйте слух в режиме распознавания и голос в режиме произношения с анализом речи.</string>
 </resources>
