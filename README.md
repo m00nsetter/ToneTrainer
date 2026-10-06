@@ -32,8 +32,8 @@
 
 | Переводчик                        | Тренажер произношения тонов       | Тренажер распознавания тонов      |
 | --------------------------------- | --------------------------------- | --------------------------------- |
-| <img width="800" height="1780" alt="translator" src="https://github.com/user-attachments/assets/41f085a3-748a-4e0b-ba6c-241704d7281b" /> | <img width="800" height="1780" alt="tones" src="https://github.com/user-attachments/assets/a13f2214-ce61-4081-aa93-a2380d904f8b" /> | <img width="800" height="1780" alt="tones2" src="https://github.com/user-attachments/assets/1f223d4b-a417-4ee2-b959-4ba9ba739643" /> |
+| <img alt="translator" src="https://github.com/user-attachments/assets/41f085a3-748a-4e0b-ba6c-241704d7281b" /> | <img alt="tones" src="https://github.com/user-attachments/assets/a13f2214-ce61-4081-aa93-a2380d904f8b" /> | <img alt="tones2" src="https://github.com/user-attachments/assets/1f223d4b-a417-4ee2-b959-4ba9ba739643" /> |
 
 | Главный экран                     | Выбор режима                      | История                           |
 | --------------------------------- | --------------------------------- | --------------------------------- |
-| <img width="1149" height="2560" alt="main" src="https://github.com/user-attachments/assets/b6c15201-28e0-4fbe-9be3-9b32623bf6da" /> | <img width="1149" height="2560" alt="choose" src="https://github.com/user-attachments/assets/da4d990c-9361-4289-8731-3c87437c6294" /> | <img width="1149" height="2560" alt="history" src="https://github.com/user-attachments/assets/f6c970b3-fb41-45e4-b8e6-e2e7f09a90a5" /> |
+| <img alt="main" src="https://github.com/user-attachments/assets/b6c15201-28e0-4fbe-9be3-9b32623bf6da" /> | <img alt="choose" src="https://github.com/user-attachments/assets/da4d990c-9361-4289-8731-3c87437c6294" /> | <img alt="history" src="https://github.com/user-attachments/assets/f6c970b3-fb41-45e4-b8e6-e2e7f09a90a5" /> |
