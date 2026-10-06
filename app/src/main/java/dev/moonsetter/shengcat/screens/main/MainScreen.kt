@@ -28,18 +28,12 @@ fun MainScreen(modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(
-                text = stringResource(R.string.app_title),
-                style = MaterialTheme.typography.displaySmall,
-                color = MaterialTheme.colorScheme.primary
-            )
-            Text(
                 text = stringResource(R.string.main_subtitle),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
 
-        // блок: как пользоваться
         InfoCard(title = stringResource(R.string.main_how_to_use_title)) {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 HowToUseItem(
@@ -61,7 +55,6 @@ fun MainScreen(modifier: Modifier = Modifier) {
             }
         }
 
-        // блок: о китайских тонах
         InfoCard(title = stringResource(R.string.main_tones_title)) {
             Text(
                 text = stringResource(R.string.main_tones_description),
@@ -72,7 +65,6 @@ fun MainScreen(modifier: Modifier = Modifier) {
             ToneShapesRow()
         }
 
-        // блок: о приложении
         InfoCard(title = stringResource(R.string.main_about_title)) {
             Text(
                 text = stringResource(R.string.main_about_description),

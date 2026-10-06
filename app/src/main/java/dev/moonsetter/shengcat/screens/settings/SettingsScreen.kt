@@ -52,12 +52,6 @@ fun SettingsScreen(
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text(
-            text = stringResource(R.string.settings_screen_name),
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier.padding(top = 16.dp)
-        )
-
         SettingsCard(title = stringResource(R.string.settings_language)) {
             SettingsSegmentedButtons(
                 options = listOf(

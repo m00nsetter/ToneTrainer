@@ -29,18 +29,12 @@ fun PracticeScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
-            text = stringResource(R.string.practice_screen_name),
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier.padding(top = 16.dp)
-        )
-
-        Text(
             text = stringResource(R.string.practice_screen_subtitle),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
-        // режим произношение
+        // режим произношения
         PracticeModeCard(
             title = stringResource(R.string.practice_pronunciation_screen_name),
             description = stringResource(R.string.practice_pronunciation_description),
@@ -49,7 +43,7 @@ fun PracticeScreen(
             onClick = onNavigateToPronunciation
         )
 
-        // режим распознавание
+        // режим распознавания
         PracticeModeCard(
             title = stringResource(R.string.practice_recognition_screen_name),
             description = stringResource(R.string.practice_recognition_description),
